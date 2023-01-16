@@ -17,7 +17,7 @@ public:
             double y;
         };
 
-        float Coord[2];
+        float coord[2];
     };
 
     double CrossProduct2D(Float2 other) const;
