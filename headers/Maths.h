@@ -9,8 +9,16 @@
 class Float2
 {
 public:
-    double x;
-    double y;
+    union
+    {
+        struct
+        {
+            double x;
+            double y;
+        };
+
+        float Coord[2];
+    };
 
     double CrossProduct2D(Float2 other) const;
 
