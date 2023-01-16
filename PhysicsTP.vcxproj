@@ -166,9 +166,13 @@
     <ClCompile Include="includes\externals\src\imgui_widgets.cpp" />
     <ClCompile Include="includes\externals\src\rlImGui.cpp" />
     <ClCompile Include="includes\externals\src\stb_image.cpp" />
+    <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="headers\App.h" />
+    <ClInclude Include="headers\UI.h" />
     <ClInclude Include="includes\raylib.h" />
     <ClInclude Include="includes\raymath.h" />
     <ClInclude Include="includes\rlgl.h" />
