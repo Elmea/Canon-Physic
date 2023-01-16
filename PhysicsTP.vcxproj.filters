@@ -42,6 +42,12 @@
     <ClCompile Include="includes\externals\src\rlImGui.cpp">
       <Filter>Fichiers d%27en-tête\Externals</Filter>
     </ClCompile>
+    <ClCompile Include="src\UI.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="src\App.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\raylib.h">
@@ -52,6 +58,12 @@
     </ClInclude>
     <ClInclude Include="includes\rlgl.h">
       <Filter>Fichiers d%27en-tête\Externals</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\UI.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="headers\App.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
