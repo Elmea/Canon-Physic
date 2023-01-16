@@ -124,7 +124,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)headers;$(SolutionDir)includes;$(SolutionDir)includes\externals\include;$(SolutionDir)includes\externals;$(SolutionDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)headers;$(SolutionDir)includes;$(SolutionDir)includes\externals\include;$(SolutionDir)includes\externals;$(SolutionDir)libs;$(SolutionDir)includes\externals\include\extras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -144,7 +144,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)headers;$(SolutionDir)includes;$(SolutionDir)includes\externals\include;$(SolutionDir)includes\externals;$(SolutionDir)libs;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)headers;$(SolutionDir)includes;$(SolutionDir)includes\externals\include;$(SolutionDir)includes\externals;$(SolutionDir)libs;$(SolutionDir)includes\externals\include\extras;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -159,6 +159,13 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="includes\externals\src\imgui.cpp" />
+    <ClCompile Include="includes\externals\src\imgui_demo.cpp" />
+    <ClCompile Include="includes\externals\src\imgui_draw.cpp" />
+    <ClCompile Include="includes\externals\src\imgui_tables.cpp" />
+    <ClCompile Include="includes\externals\src\imgui_widgets.cpp" />
+    <ClCompile Include="includes\externals\src\rlImGui.cpp" />
+    <ClCompile Include="includes\externals\src\stb_image.cpp" />
     <ClCompile Include="src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
