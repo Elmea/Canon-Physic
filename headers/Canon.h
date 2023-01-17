@@ -16,7 +16,8 @@ namespace Core
 		Renderer::RendererManager* m_renderManager;
 
 	public:
-		Float2 position = Float2{ 10,100 };
+		Float2 size;
+		Float2 position = Float2{ 200,100 };
 		double angle = 0;
 		double canonLength = 1;
 		double power = 25;

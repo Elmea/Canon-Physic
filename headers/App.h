@@ -25,7 +25,7 @@ private :
 
 public :
 	~App();
-	static double m_deltaTime;
+	static double m_deltaTime ;
 
 	void Init(int width, int height);
 	void Update();

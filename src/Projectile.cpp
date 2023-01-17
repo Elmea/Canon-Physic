@@ -18,7 +18,7 @@ namespace Core
 
 	void Projectile::Update(double deltaTime)
 	{
-		AddForce(Float2{ 0, 9.81 }, deltaTime*2);
+		AddForce(Float2{ 0, Data::GRAVITY }, deltaTime);
 
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;

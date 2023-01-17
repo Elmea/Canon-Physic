@@ -9,12 +9,18 @@ namespace Core
 		m_activeShootPrediction = true;
 		m_canonTex = LoadTexture("assets/Cannon.png");
 		m_cannonBaseTex = LoadTexture("assets/Cannonbase.png");
+		
+		size.x = m_canonTex.width;
+		size.y = m_canonTex.height;
 	}
 	Canon::Canon()
 	{
 		m_activeShootPrediction = true;
 		m_canonTex = LoadTexture("assets/Cannon.png");
 		m_cannonBaseTex = LoadTexture("assets/Cannonbase.png");
+
+		size.x  = m_canonTex.width;
+		size.y  = m_canonTex.height;
 	}
 
 	Canon::~Canon()
@@ -37,22 +43,19 @@ namespace Core
 
 	void Canon::Draw()
 	{
-		int frameWidth = m_canonTex.width;
-		int frameHeight = m_canonTex.height;
-
 		// Source rectangle (part of the texture to use for drawing)
-		Rectangle sourceRec = { 0.0f, 0.0f, (float)frameWidth, (float)frameHeight };
+		Rectangle sourceRec = { 0.0f, 0.0f, (float)size.x, (float)size.y };
 		// Destination rectangle (screen rectangle where drawing part of texture)
-		Rectangle destRec = { 200, position.y, frameWidth , frameHeight };
+		Rectangle destRec = { position.x, position.y, size.x , size.y };
 
 		// Origin of the texture (rotation/scale point), it's relative to destination rectangle size
-		Vector2 origin = { (float)frameWidth / 2, (float)frameHeight / 2 };
+		Vector2 origin = { (float)size.x / 2, (float)size.y / 2 };
 
 		/* Draw cannon and it's base */
 		DrawTexturePro(m_canonTex, sourceRec, destRec, origin, angle, WHITE);
-		DrawTexture(m_cannonBaseTex, destRec.x - frameWidth / 2 + 25, destRec.y, WHITE);
+		DrawTexture(m_cannonBaseTex, destRec.x - (float)size.x / 2 + 25, destRec.y, WHITE);
 
 		/* Draw support of the cannon */
-		DrawRectangle(destRec.x - frameWidth / 2, position.y + m_cannonBaseTex.height, frameWidth, 1080, BLACK);
+		DrawRectangle(destRec.x - (float)size.x / 2, position.y + m_cannonBaseTex.height, (float)size.x, 1080, BLACK);
 	}
 }

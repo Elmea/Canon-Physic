@@ -3,6 +3,8 @@
 #include "Maths.h"
 #include "Canon.h" 
 
+
+double App::m_deltaTime = 0.0;
 App::~App()
 {
     rlImGuiShutdown();
@@ -28,8 +30,7 @@ void App::Init(int width, int height)
 	m_width = width;
     CalcDeltaTime();
 
-
-    InitWindow(width, height, "raylib [core] example - basic window");
+    InitWindow(m_width, m_height, "raylib [core] example - basic window");
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     m_interface.Init();
 
@@ -58,12 +59,17 @@ void App::Update()
         /* ImGui */
         m_interface.NewFrame();
 
+        m_interface.MoveCannon(canon);
         m_interface.NewWindow("MainWindow");
 
         m_interface.ProjectileParameters();
         m_interface.CanonParameters(canon);
         m_interface.WorldParameters(worldSettings);
 
+        m_interface.CloseWindow();
+
+        m_interface.NewWindow("Game");
+        m_interface.Shoot(canon , m_objectManager);
         m_interface.CloseWindow();
 
         m_interface.EndFrame();
