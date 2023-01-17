@@ -166,20 +166,21 @@
     <ClCompile Include="includes\externals\src\imgui_widgets.cpp" />
     <ClCompile Include="includes\externals\src\rlImGui.cpp" />
     <ClCompile Include="includes\externals\src\stb_image.cpp" />
-    <ClCompile Include="Projectile.cpp" />
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\Canon.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\App.h" />
+    <ClInclude Include="headers\SimulationData.h" />
     <ClInclude Include="headers\UI.h" />
     <ClInclude Include="includes\Canon.h" />
+    <ClInclude Include="includes\Projectile.h" />
     <ClInclude Include="includes\raylib.h" />
     <ClInclude Include="includes\raymath.h" />
     <ClInclude Include="includes\rlgl.h" />
-    <ClInclude Include="Projectile.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
