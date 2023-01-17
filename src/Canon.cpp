@@ -11,7 +11,7 @@ namespace Core
 		cannonBase = LoadTexture("assets/Cannonbase.png");
 
 		size.x  = cannon.width;
-		size.y = cannon.height;
+		size.y  = cannon.height;
 	}
 
 	Canon::~Canon()
@@ -33,8 +33,6 @@ namespace Core
 
 	void Canon::Draw()
 	{
-
-
 		// Source rectangle (part of the texture to use for drawing)
 		Rectangle sourceRec = { 0.0f, 0.0f, (float)size.x, (float)size.y };
 		// Destination rectangle (screen rectangle where drawing part of texture)

@@ -14,8 +14,8 @@ double Float2::DotProduct(const Float2* other) const
 void Float2::PlanRotation(double angle)
 {
     float tmpx = this->x;
-    this->x = this->x * cos(DEG2RAD * angle) - this->y * sin(DEG2RAD * angle);
-    this->y = tmpx * sin(DEG2RAD * angle) + this->y * cos(DEG2RAD * angle);
+    this->x = this->x * cos(angle) - this->y * sin(angle);
+    this->y = tmpx * sin(angle) + this->y * cos(angle);
 }
 
 Float2 Float2::operator+(Float2& other)
