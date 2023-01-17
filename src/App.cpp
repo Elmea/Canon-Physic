@@ -1,4 +1,6 @@
 #include "App.h"
+#include "Projectile.h"
+#include "Maths.h"
 
 App::~App()
 {
@@ -6,13 +8,27 @@ App::~App()
     CloseWindow();       
 }
 
+double App::DeltaTime()
+{
+    return m_deltaTime;
+}
+
+void App::CalcDeltaTime()
+{
+    std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
+    
+    m_deltaTime = std::chrono::duration<double>(now - m_lastFrame).count();
+    m_lastFrame = now;
+}
+
 void App::Init(int width, int height)
 {
 	m_height = height;
 	m_width = width;
+    CalcDeltaTime();
 
-    const int screenWidth = 1920;
-    const int screenHeight = 1080;
+    screenWidth = 1920;
+    screenHeight = 1080;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     rlImGuiSetup(true);
@@ -22,9 +38,18 @@ void App::Init(int width, int height)
 
 void App::Update()
 {
+    CalcDeltaTime();
+
+    Core::Projectile testProjectile{ Float2{(double)screenWidth/10, (double)6*screenHeight/8}, 15, 5 };
+    testProjectile.AddForce(Float2{ 25 , -50 }, DeltaTime());
+
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        CalcDeltaTime();
+
+        testProjectile.Update(DeltaTime());
+
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
@@ -32,12 +57,15 @@ void App::Update()
 
         /* Raylib Draws */
         DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        testProjectile.Draw();
 
         /* ========================  */
         /* ImGui */
         rlImGuiBegin();
         ImGui::Begin("Test");
         ImGui::Button("button");
+        ImGui::Text("Delta time : %f", DeltaTime());
+        ImGui::Text(testProjectile.GetPos().ToString().c_str());
         ImGui::End();
 
         rlImGuiEnd();
