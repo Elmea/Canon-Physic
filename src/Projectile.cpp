@@ -16,7 +16,7 @@ namespace Core
 	Projectile::~Projectile()
 	{
 	}
-
+	
 	void Projectile::Update(double deltaTime)
 	{
 		if (m_pos.y >= 1080)
