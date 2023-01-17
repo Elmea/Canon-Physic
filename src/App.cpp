@@ -57,6 +57,7 @@ void App::Update()
 
         /* ========================  */
         /* ImGui */
+        m_interface.ShowFPS();
         m_interface.NewFrame();
 
         m_interface.MoveCannon(canon);

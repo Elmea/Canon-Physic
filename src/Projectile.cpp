@@ -2,7 +2,7 @@
 #include "Projectile.h"
 #include "SimulationData.h"
 #include "App.h"
-
+#include <iostream>
 namespace Core
 {
 
@@ -31,6 +31,14 @@ namespace Core
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;
 		m_pos = m_pos + vel;
+
+		if (m_lifeTime >= m_timeLived)
+		{
+			m_timeLived += 0.1f;
+			m_listPoints.push_back(m_pos);
+		}
+
+		DrawProjectilePath();
 	}
 
 	void Projectile::Draw()
@@ -60,5 +68,17 @@ namespace Core
 	double Projectile::CalcTrailCoefficient()
 	{
 		return 24.0 / ((Data::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::airViscosity);
+	}
+
+	void Projectile::DrawProjectilePath()
+	{
+		int nbPoints = m_listPoints.size();
+		if (nbPoints < 1) 
+			return;
+
+		for (int i = 0; i < nbPoints -1; i++)
+			DrawLine(m_listPoints[i].x, m_listPoints[i].y, m_listPoints[i + 1].x, m_listPoints[i + 1].y, SKYBLUE);
+
+		DrawLine(m_listPoints[nbPoints - 1].x, m_listPoints[nbPoints - 1].y, m_pos.x, m_pos.y, SKYBLUE);
 	}
 }

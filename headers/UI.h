@@ -42,9 +42,10 @@ public :
 
 	void NewWindow(const char* windowName);
 	void CloseWindow();
+	void ShowFPS() { DrawFPS(10, 10); };
 
 	/* ImGui */
-	void ProjectileParameters(/* TODO Get the projectile class here */);
+	void ProjectileParameters();
 	void CanonParameters(Core::Canon* canon);
 	void WorldParameters(WorldParam& world);
 	void Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager);

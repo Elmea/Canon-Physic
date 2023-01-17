@@ -50,7 +50,7 @@ void UI::CloseWindow()
 void UI::ProjectileParameters()
 {
 
-    if (ImGui::TreeNodeEx("Projectile parameters "))
+    if (ImGui::TreeNodeEx("Projectile parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
         if (SliderDouble("Weight##Projectile", &weight, 0.0001, 1000))
         {
@@ -68,10 +68,10 @@ void UI::ProjectileParameters()
 
 void UI::CanonParameters(Core::Canon* canon)
 {
-    if (ImGui::TreeNodeEx("Canon parameters "))
+    if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
         SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
-        SliderDouble("Strength##Canon", &canon->power, 0.001, 1000);
+        SliderDouble("Strength##Canon", &canon->power, 400, 2000);
         SliderDouble("Shoot direction##Canon", &canon->angle, -45, 45);
         SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
         ImGui::TreePop();
@@ -92,10 +92,7 @@ void UI::WorldParameters(WorldParam& world)
 void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
     if (ImGui::Button("Shoot", ImVec2(150,75)))
-    {
         canon->Shoot(sizeP,weight);
-        std::cout << " shoot" << std::endl;
-    }
 }
 
 void UI::MoveCannon(Core::Canon* canon)
@@ -122,15 +119,18 @@ void UI::MoveCannon(Core::Canon* canon)
     }
     else if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
     {
-        Float2 delta = mousePos - lastMousePos;
-
-        if (ClickInRectangle(mousePos, { (float)(canon->position.x - 200.f) ,(float)(canon->position.y - 200), (float)(canon->position.x + canon->size.x + 200) , (float)(canon->position.y + canon->size.y + 200) }))
+        if (lastMousePos.x != -100 && lastMousePos.y != -100)
         {
-            canon->angle += delta.x * speedDrag;
-            if (canon->angle < minAngleCanon)
-                canon->angle = minAngleCanon;
-            if (canon->angle > maxAngleCanon)
-                canon->angle = maxAngleCanon;
+            Float2 delta = mousePos - lastMousePos;
+
+            if (ClickInRectangle(mousePos, { (float)(canon->position.x - 200.f) ,(float)(canon->position.y - 200), (float)(canon->position.x + canon->size.x + 200) , (float)(canon->position.y + canon->size.y + 200) }))
+            {
+                canon->angle += delta.y * speedDrag;
+                if (canon->angle < minAngleCanon)
+                    canon->angle = minAngleCanon;
+                if (canon->angle > maxAngleCanon)
+                    canon->angle = maxAngleCanon;
+            }
         }
         lastMousePos = mousePos;
     }
