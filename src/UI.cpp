@@ -71,19 +71,21 @@ void UI::CanonParameters(Core::Canon* canon)
     if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
         SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
-        SliderDouble("Strength##Canon", &canon->power, 400, 2000);
+        SliderDouble("Strength##Canon", &canon->power, 5 *(10.0/ Data::WorldSetting::pixelPerMeter), 300 * (10.0 / Data::WorldSetting::pixelPerMeter));
         SliderDouble("Shoot direction##Canon", &canon->angle, -45, 45);
         SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
         ImGui::TreePop();
     }
 }
 
-void UI::WorldParameters(WorldParam& world)
+void UI::WorldParameters()
 {
-    if (ImGui::TreeNodeEx("World config"))
+    if (ImGui::TreeNodeEx("World config",ImGuiTreeNodeFlags_DefaultOpen ))
     {
-        SliderDouble("Gravity", &world.gravity, -1, 50);
-        SliderDouble("Air Resistance", &world.airResistance, 0, 10);
+        SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
+        SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 10);
+        SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
+        SliderDouble("Size Repere", &Data::WorldSetting::pixelPerMeter, 0.0001f, 10);
 
         ImGui::TreePop();
     }

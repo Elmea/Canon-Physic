@@ -15,8 +15,11 @@ namespace Core
 		double m_timeLived = 0; /* 0.1f * m_timeLived = the life time  */
 		const double m_frontSurface;
 
+
 		Float2 m_velocity{ 0, 0 };
 		std::vector<Float2>m_listPoints;
+
+
 
 		Float2 CalcTrail();
 		double CalcTrailCoefficient();

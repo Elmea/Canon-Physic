@@ -35,6 +35,9 @@ void App::Init(int width, int height)
     m_interface.Init();
 
     canon = new Core::Canon(&m_objectManager);
+    camera.target = Vector2{ (float)canon->position.x+970,(float)canon->position.y +300};
+    camera.offset = Vector2{ m_width / 2.0f, m_height / 2.0f };
+    camera.rotation = 0;
     m_objectManager.AddObject(canon);
 }
 
@@ -52,8 +55,13 @@ void App::Update()
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
+        BeginMode2D(camera);
+        camera.zoom += ((float)GetMouseWheelMove() * 0.05f);
+       
         /* Raylib Draws */
         m_objectManager.DrawObject();
+        EndMode2D();
+
 
         /* ========================  */
         /* ImGui */
@@ -65,7 +73,7 @@ void App::Update()
 
         m_interface.ProjectileParameters();
         m_interface.CanonParameters(canon);
-        m_interface.WorldParameters(worldSettings);
+        m_interface.WorldParameters();
 
         m_interface.CloseWindow();
 

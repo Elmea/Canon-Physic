@@ -3,6 +3,7 @@
 #include "rlImGui.h"
 #include "RenderManager.h"
 #include "Maths.h"
+#include "SimulationData.h"
 
 namespace Core
 {
@@ -11,8 +12,10 @@ namespace Core
 
 struct WorldParam
 {
-	double gravity = 9.81;
-	double airResistance;
+	double airResistance = 0.1;
+	double airViscosity = 15.6;
+	double GRAVITY = 9.80665f;
+	double pixelPerMeter = 10;
 };
 
 class UI
@@ -47,7 +50,7 @@ public :
 	/* ImGui */
 	void ProjectileParameters();
 	void CanonParameters(Core::Canon* canon);
-	void WorldParameters(WorldParam& world);
+	void WorldParameters();
 	void Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager);
 
 	void MoveCannon(Core::Canon* canon);

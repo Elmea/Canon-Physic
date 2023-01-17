@@ -3,8 +3,19 @@
 
 namespace Data
 {
-	static double airResistance = 0.1;
-	static double airViscosity = 15.6;
-	static double GRAVITY = 9.80665f;
-	static Float2 gravity = { 0.0,GRAVITY };
+	class WorldSetting
+	{
+	public:
+		WorldSetting();
+		~WorldSetting();
+		static double airResistance;
+		static double airViscosity;
+		static double GRAVITY;
+		static double pixelPerMeter;
+	private:
+
+	};
+
+	
 }
+

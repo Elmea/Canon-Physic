@@ -20,6 +20,8 @@ private :
 	WorldParam worldSettings;
 	Core::Canon* canon;
 
+	Camera2D camera = { 0 };
+
 	std::chrono::time_point<std::chrono::high_resolution_clock> m_lastFrame;
 	void CalcDeltaTime();
 

@@ -172,6 +172,7 @@
     <ClCompile Include="src\Maths.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\RenderManager.cpp" />
+    <ClCompile Include="src\SimulateData.cpp" />
     <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>

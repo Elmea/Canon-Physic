@@ -10,7 +10,7 @@ namespace Core
 																			m_frontSurface(PI * ((radius * radius)/16.0))
 	{
 		angle = DEG2RAD * angle;
-		AddForce(Float2{ power * cos(angle), power * sin(angle) }, App::m_deltaTime);
+		AddForce(Float2{ power * cos(angle), power  * sin(angle) }, App::m_deltaTime) ;
 	}
 
 	Projectile::~Projectile()
@@ -19,6 +19,7 @@ namespace Core
 	
 	void Projectile::Update(double deltaTime)
 	{
+		DrawProjectilePath();
 		if (m_pos.y >= 1080)
 		{
 			m_pos.y = 1080;
@@ -26,7 +27,7 @@ namespace Core
 		}
 
 		//AddForce(CalcTrail(), deltaTime);
-		AddForce(Float2{ 0, Data::GRAVITY }, deltaTime);
+		AddForce(Float2{ 0,Data::WorldSetting::GRAVITY  }, deltaTime);
 
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;
@@ -38,7 +39,7 @@ namespace Core
 			m_listPoints.push_back(m_pos);
 		}
 
-		DrawProjectilePath();
+	
 	}
 
 	void Projectile::Draw()
@@ -55,7 +56,7 @@ namespace Core
 	Float2 Projectile::CalcTrail()
 	{
 		double v = m_velocity.Magnitude();
-		double magnitude = 0.5 * Data::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v;
+		double magnitude = 0.5 * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v;
 
 		int xSign = m_velocity.x >= 0 ? -1 : 1;
 		int ySign = m_velocity.y >= 0 ? -1 : 1;
@@ -67,7 +68,7 @@ namespace Core
 
 	double Projectile::CalcTrailCoefficient()
 	{
-		return 24.0 / ((Data::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::airViscosity);
+		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity);
 	}
 
 	void Projectile::DrawProjectilePath()
