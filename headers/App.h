@@ -21,11 +21,11 @@ private :
 	Core::Canon* canon;
 
 	std::chrono::time_point<std::chrono::high_resolution_clock> m_lastFrame;
-	double m_deltaTime;
 	void CalcDeltaTime();
 
 public :
 	~App();
+	static double m_deltaTime;
 
 	void Init(int width, int height);
 	void Update();

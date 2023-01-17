@@ -11,8 +11,9 @@ namespace Core
 	private:
 		bool m_activeShootPrediction;
 
-		Texture2D cannon;
-		Texture2D cannonBase;
+		Texture2D m_canonTex;
+		Texture2D m_cannonBaseTex;
+		Renderer::RendererManager* m_renderManager;
 
 	public:
 		Float2 position = Float2{ 10,100 };
@@ -24,13 +25,14 @@ namespace Core
 		void ShowPredictionShoot();
 
 	public:
+		Canon(Renderer::RendererManager* manager);
 		Canon();
 		~Canon();
 
 		void ActivateShootPrediction(bool state) { m_activeShootPrediction = state; };
 
-		void Shoot();
-		void Update();
+		void Shoot(double radius, double weight);
+		void Update(double deltaTime);
 		void Draw();
 
 

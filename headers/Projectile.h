@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "RenderManager.h"
 
 namespace Core
 {
@@ -14,7 +15,7 @@ namespace Core
 		Float2 m_velocity{ 0, 0 };
 
 	public:
-		Projectile(Float2 position, double radius, double weight);
+		Projectile(Float2 position, double radius, double weight, double power, double angle);
 		~Projectile();
 
 		void Update(double deltaTime);

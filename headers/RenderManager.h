@@ -7,7 +7,7 @@ namespace Renderer
 	{
 	public:
 		virtual void Draw() = 0;
-		virtual void Update() = 0;
+		virtual void Update(double deltaTime) = 0;
 	};
 
 	class RendererManager
@@ -25,7 +25,7 @@ namespace Renderer
 		void AddObject(RenderObject* obj);
 		void RemoveObject(RenderObject* obj);
 		void DrawObject();
-		void UpdateObject();
+		void UpdateObject(double deltaTime);
 
 	};
 

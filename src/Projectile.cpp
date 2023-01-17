@@ -1,14 +1,15 @@
 #include <raylib.h>
-
 #include "Projectile.h"
 #include "SimulationData.h"
-
+#include "App.h"
 
 namespace Core
 {
 
-	Projectile::Projectile(Float2 position, double radius, double weight) : m_pos(position), m_radius(radius), m_weight(weight)
+	Projectile::Projectile(Float2 position, double radius, double weight,double power, double angle) : m_pos(position), m_radius(radius), m_weight(weight)
 	{
+		angle = DEG2RAD * angle;
+		AddForce(Float2{ power * cos(angle), power * sin(angle) }, App::m_deltaTime);
 	}
 
 	Projectile::~Projectile()

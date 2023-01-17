@@ -10,6 +10,12 @@ namespace Renderer
 
 	RendererManager::~RendererManager()
 	{
+		for (std::vector<RenderObject*>::iterator i = m_renderObjectList.begin(); i != m_renderObjectList.end(); ++i)
+		{
+			delete((*i));
+		}
+
+		m_renderObjectList.clear();
 	}
 
 	bool RendererManager::Contains(std::vector<RenderObject*> list, RenderObject* obj)
@@ -42,11 +48,11 @@ namespace Renderer
 		}
 	}
 
-	void RendererManager::UpdateObject()
+	void RendererManager::UpdateObject(double deltaTime)
 	{
 		for (std::vector<RenderObject*>::iterator i = m_renderObjectList.begin(); i != m_renderObjectList.end(); i++)
 		{
-			(*i)->Update();
+			(*i)->Update(deltaTime);
 		}
 	}
 	
