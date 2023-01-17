@@ -28,10 +28,7 @@ void App::Init(int width, int height)
 	m_width = width;
     CalcDeltaTime();
 
-    screenWidth = 1920;
-    screenHeight = 1080;
-
-    InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
+    InitWindow(m_width, m_height, "raylib [core] example - basic window");
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     m_interface.Init();
 

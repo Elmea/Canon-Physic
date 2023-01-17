@@ -3,11 +3,11 @@
 #include "Projectile.h"
 #include "SimulationData.h"
 
-
 namespace Core
 {
 
-	Projectile::Projectile(Float2 position, double radius, double weight) : m_pos(position), m_radius(radius), m_weight(weight)
+	Projectile::Projectile(Float2 position, double radius, double weight) : m_pos(position), m_radius(radius), m_weight(weight), 
+																			m_frontSurface(PI * ((radius * radius)/16.0))
 	{
 	}
 
@@ -23,7 +23,8 @@ namespace Core
 			return;
 		}
 
-		AddForce(Float2{ 0, 9.81 }, deltaTime*2);
+		AddForce(Float2{ 0, 9.81 }, deltaTime);
+		AddForce(CalcTrail(), deltaTime);
 
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;
@@ -41,4 +42,21 @@ namespace Core
 		m_velocity = m_velocity + f;
 	}
 
+	Float2 Projectile::CalcTrail()
+	{
+		double v = m_velocity.Magnitude();
+		double magnitude = 0.5 * Data::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v;
+
+		int xSign = m_velocity.x >= 0 ? -1 : 1;
+		int ySign = m_velocity.y >= 0 ? -1 : 1;
+
+		double theta = acos(m_velocity.y);
+
+		return { magnitude * cos(theta) * xSign, magnitude * sin(theta) * ySign };
+	}
+
+	double Projectile::CalcTrailCoefficient()
+	{
+		return 24.0 / ((Data::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::airViscosity);
+	}
 }
