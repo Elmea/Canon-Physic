@@ -3,10 +3,10 @@
 #include "RenderManager.h"
 namespace Core
 {
-	class Projectile :RenderObject
+	class Projectile : public Renderer::RenderObject
 	{
 	private:
-		Float2 m_position;
+		Float2 m_position = Float2{ 0,0 };
 		double m_weight;
 		double m_radius;
 

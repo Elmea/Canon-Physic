@@ -1,4 +1,5 @@
 #include "App.h"
+#include "Canon.h" 
 
 App::~App()
 {
@@ -17,7 +18,12 @@ void App::Init(int width, int height)
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     rlImGuiSetup(true);
 
-    SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    SetTargetFPS(60);
+
+    Core::Canon* canon = new Core::Canon();
+
+    m_objectManager.AddObject(canon);
+
 }
 
 void App::Update()
@@ -32,7 +38,7 @@ void App::Update()
 
         /* Raylib Draws */
         DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-
+        m_objectManager.DrawObject();
         /* ========================  */
         /* ImGui */
         rlImGuiBegin();

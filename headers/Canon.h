@@ -3,7 +3,7 @@
 #include "RenderManager.h"
 namespace Core
 {
-	class Canon :RenderObject
+	class Canon : public Renderer::RenderObject
 	{
 
 
@@ -11,7 +11,7 @@ namespace Core
 		bool m_activeShootPrediction;
 
 	public:
-		Float2 position;
+		Float2 position = Float2{ 10,100 };
 		double angle = 0;
 		double canonLength = 1;
 		double power = 25;
@@ -26,6 +26,7 @@ namespace Core
 		void ActivateShootPrediction(bool state) { m_activeShootPrediction = state; };
 
 		void Shoot();
+		void Update();
 		void Draw();
 
 

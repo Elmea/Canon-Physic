@@ -36,9 +36,18 @@ namespace Renderer
 
 	void RendererManager::DrawObject()
 	{
-		for (std::vector<RenderObject*>::iterator i = m_renderObjectList.begin() ; i != m_renderObjectList.end(); i++)
+		for (std::vector<RenderObject*>::iterator i = m_renderObjectList.begin() ; i != m_renderObjectList.end(); ++i)
 		{
 			(*i)->Draw();
 		}
 	}
+
+	void RendererManager::UpdateObject()
+	{
+		for (std::vector<RenderObject*>::iterator i = m_renderObjectList.begin(); i != m_renderObjectList.end(); i++)
+		{
+			(*i)->Update();
+		}
+	}
+	
 }
