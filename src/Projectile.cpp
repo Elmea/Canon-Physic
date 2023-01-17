@@ -17,6 +17,12 @@ namespace Core
 
 	void Projectile::Update(double deltaTime)
 	{
+		if (m_pos.y >= 1000)
+		{
+			m_pos.y = 1000;
+			return;
+		}
+
 		AddForce(Float2{ 0, 9.81 }, deltaTime*2);
 
 		m_lifeTime += deltaTime;
