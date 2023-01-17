@@ -1,4 +1,6 @@
 #include "App.h"
+#include "Projectile.h"
+#include "Maths.h"
 #include "Canon.h" 
 
 App::~App()
@@ -7,13 +9,27 @@ App::~App()
     CloseWindow();       
 }
 
+double App::DeltaTime()
+{
+    return m_deltaTime;
+}
+
+void App::CalcDeltaTime()
+{
+    std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
+    
+    m_deltaTime = std::chrono::duration<double>(now - m_lastFrame).count();
+    m_lastFrame = now;
+}
+
 void App::Init(int width, int height)
 {
 	m_height = height;
 	m_width = width;
+    CalcDeltaTime();
 
-    const int screenWidth = 1920;
-    const int screenHeight = 1080;
+    screenWidth = 1920;
+    screenHeight = 1080;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
@@ -25,9 +41,17 @@ void App::Init(int width, int height)
 
 void App::Update()
 {
+    CalcDeltaTime();
+
+    
+
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
+        CalcDeltaTime();
+
+       
+
         // Draw
         //----------------------------------------------------------------------------------
         BeginDrawing();
