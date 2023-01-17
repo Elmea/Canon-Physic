@@ -15,7 +15,7 @@ namespace Core
 	Projectile::~Projectile()
 	{
 	}
-
+	
 	void Projectile::Update(double deltaTime)
 	{
 		AddForce(Float2{ 0, Data::GRAVITY }, deltaTime);
