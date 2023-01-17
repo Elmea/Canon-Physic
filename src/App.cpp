@@ -15,9 +15,8 @@ void App::Init(int width, int height)
     const int screenHeight = 1080;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
-    rlImGuiSetup(true);
-
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    m_interface.Init();
 }
 
 void App::Update()
@@ -31,16 +30,22 @@ void App::Update()
         ClearBackground(RAYWHITE);
 
         /* Raylib Draws */
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
+        DrawText("Congrats! You created your first window!", 500, 500, 20, LIGHTGRAY);
+        m_interface.DrawCanon();
 
         /* ========================  */
         /* ImGui */
-        rlImGuiBegin();
-        ImGui::Begin("Test");
-        ImGui::Button("button");
-        ImGui::End();
+        m_interface.NewFrame();
 
-        rlImGuiEnd();
+        m_interface.NewWindow("MainWindow");
+
+        m_interface.ProjectileParameters();
+        m_interface.CanonParameters();
+        m_interface.WorldParameters(worldSettings);
+
+        m_interface.CloseWindow();
+
+        m_interface.EndFrame();
         /* ========================  */
 
         EndDrawing();
