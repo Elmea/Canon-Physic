@@ -1,4 +1,5 @@
 #include "UI.h"
+#include "Canon.h"
 
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
@@ -23,8 +24,6 @@ bool UI::ClickInRectangle(Vector2 mousePos, Rectangle rec)
 void UI::Init()
 {
     rlImGuiSetup(true);
-    cannon = LoadTexture("assets/Cannon.png");
-    cannonBase = LoadTexture("assets/Cannonbase.png");
 }
 
 UI::~UI()
@@ -70,17 +69,13 @@ void UI::ProjectileParameters()
     }
 }
 
-void UI::CanonParameters()
+void UI::CanonParameters(Core::Canon* canon)
 {
-    /*Temporary values waiting for canon class */
-    static double power = 5;
-
-
     if (ImGui::TreeNodeEx("Canon parameters "))
     {
-        ImGui::SliderInt("Height##Canon", &height, 300, 1000);
-        SliderDouble("Strength##Canon", &power, 0.001, 1000);
-        SliderDouble("Shoot direction##Canon", &angle, -45, 45);
+        SliderDouble("Height##Canon", &canon->position.y, 100, 1000);
+        SliderDouble("Strength##Canon", &canon->power, 0.001, 1000);
+        SliderDouble("Shoot direction##Canon", &canon->angle, -45, 45);
 
         ImGui::TreePop();
     }
@@ -106,24 +101,3 @@ void UI::MoveCannon()
     //}
 }
 
-void UI::DrawCanon()
-{
-    int frameWidth = cannon.width;
-    int frameHeight = cannon.height;
-
-    // Source rectangle (part of the texture to use for drawing)
-    Rectangle sourceRec = { 0.0f, 0.0f, (float)frameWidth, (float)frameHeight };
-    // Destination rectangle (screen rectangle where drawing part of texture)
-    Rectangle newDestRec = { 200, height, frameWidth , frameHeight  };
-    destRec = newDestRec;
-
-    // Origin of the texture (rotation/scale point), it's relative to destination rectangle size
-    Vector2 origin = { (float)frameWidth/2, (float)frameHeight/2 };
-
-    /* Draw cannon and it's base */
-    DrawTexturePro(cannon, sourceRec, destRec, origin, angle, WHITE);
-    DrawTexture(cannonBase, destRec.x - frameWidth/2 + 25, destRec.y, WHITE);
-
-    /* Draw support of the cannon */
-    DrawRectangle(destRec.x - frameWidth / 2 , height + cannonBase.height, frameWidth, 1080, BLACK);
-}

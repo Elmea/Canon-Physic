@@ -167,11 +167,20 @@
     <ClCompile Include="includes\externals\src\rlImGui.cpp" />
     <ClCompile Include="includes\externals\src\stb_image.cpp" />
     <ClCompile Include="src\App.cpp" />
+    <ClCompile Include="src\Canon.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Maths.cpp" />
+    <ClCompile Include="src\Projectile.cpp" />
+    <ClCompile Include="src\RenderManager.cpp" />
     <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\App.h" />
+    <ClInclude Include="headers\Canon.h" />
+    <ClInclude Include="headers\Maths.h" />
+    <ClInclude Include="headers\Projectile.h" />
+    <ClInclude Include="headers\RenderManager.h" />
+    <ClInclude Include="headers\SimulationData.h" />
     <ClInclude Include="headers\UI.h" />
     <ClInclude Include="includes\raylib.h" />
     <ClInclude Include="includes\raymath.h" />

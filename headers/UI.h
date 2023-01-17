@@ -2,6 +2,11 @@
 #include <imgui.h>
 #include "rlImGui.h"
 
+namespace Core
+{
+	class Canon;
+}
+
 struct WorldParam
 {
 	double gravity = 9.81;
@@ -17,13 +22,7 @@ private :
 
 	double weight = 10;
 	double sizeP = 5;
-	double angle = 0; /*degree here */
-	int height = 1000;
 
-	Texture2D cannon;
-	Texture2D cannonBase;
-
-	Rectangle destRec;
 public :
 	void Init();
 	~UI();
@@ -37,10 +36,8 @@ public :
 
 	/* ImGui */
 	void ProjectileParameters(/* TODO Get the projectile class here */);
-	void CanonParameters(/*TODO Get the canon class here */);
+	void CanonParameters(Core::Canon* canon);
 	void WorldParameters(WorldParam& world);
 
-	/* Raylib */
 	void MoveCannon();
-	void DrawCanon();
 };
