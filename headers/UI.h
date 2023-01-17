@@ -1,6 +1,8 @@
 #pragma once
 #include <imgui.h>
 #include "rlImGui.h"
+#include "RenderManager.h"
+#include "Maths.h"
 
 namespace Core
 {
@@ -18,11 +20,18 @@ class UI
 private :
 	bool SliderDouble(const char* text, double* v, double min, double max);
 	bool SliderDoubleN(const char* text, int nbValues , double* v, double min, double max);
-	bool ClickInRectangle(Vector2 mousePos, Rectangle rec);
+	bool ClickInRectangle(Float2 mousePos, Rectangle rec);
 
 	double weight = 10;
 	double sizeP = 5;
+	double speedDrag = 1;
+	Float2 lastMousePos;
 
+	double maxHeightCanon = 1000;
+	double minHeightCanon = 100;
+	
+	double maxAngleCanon = 45;
+	double minAngleCanon = -45;
 public :
 	void Init();
 	~UI();
@@ -38,6 +47,7 @@ public :
 	void ProjectileParameters(/* TODO Get the projectile class here */);
 	void CanonParameters(Core::Canon* canon);
 	void WorldParameters(WorldParam& world);
+	void Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager);
 
-	void MoveCannon();
+	void MoveCannon(Core::Canon* canon);
 };

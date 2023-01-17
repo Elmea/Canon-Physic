@@ -15,6 +15,7 @@ namespace Core
 		Texture2D cannonBase;
 
 	public:
+		Float2 size;
 		Float2 position = Float2{ 10,100 };
 		double angle = 0;
 		double canonLength = 1;

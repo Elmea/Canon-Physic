@@ -40,12 +40,17 @@ void App::Update()
         /* ImGui */
         m_interface.NewFrame();
 
+        m_interface.MoveCannon(canon);
         m_interface.NewWindow("MainWindow");
 
         m_interface.ProjectileParameters();
         m_interface.CanonParameters(canon);
         m_interface.WorldParameters(worldSettings);
 
+        m_interface.CloseWindow();
+
+        m_interface.NewWindow("Game");
+        m_interface.Shoot(canon , m_objectManager);
         m_interface.CloseWindow();
 
         m_interface.EndFrame();
