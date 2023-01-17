@@ -12,7 +12,12 @@ namespace Core
 		double m_radius;
 		double m_lifeTime = 0;
 
+		const double m_frontSurface;
+
 		Float2 m_velocity{ 0, 0 };
+
+		Float2 CalcTrail();
+		double CalcTrailCoefficient();
 
 	public:
 		Projectile(Float2 position, double radius, double weight, double power, double angle);

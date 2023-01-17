@@ -6,7 +6,8 @@
 namespace Core
 {
 
-	Projectile::Projectile(Float2 position, double radius, double weight,double power, double angle) : m_pos(position), m_radius(radius), m_weight(weight)
+	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle) : m_pos(position), m_radius(radius), m_weight(weight),
+																			m_frontSurface(PI * ((radius * radius)/16.0))
 	{
 		angle = DEG2RAD * angle;
 		AddForce(Float2{ power * cos(angle), power * sin(angle) }, App::m_deltaTime);
@@ -18,6 +19,13 @@ namespace Core
 
 	void Projectile::Update(double deltaTime)
 	{
+		if (m_pos.y >= 1080)
+		{
+			m_pos.y = 1080;
+			return;
+		}
+
+		//AddForce(CalcTrail(), deltaTime);
 		AddForce(Float2{ 0, Data::GRAVITY }, deltaTime);
 
 		m_lifeTime += deltaTime;
@@ -36,4 +44,21 @@ namespace Core
 		m_velocity = m_velocity + f;
 	}
 
+	Float2 Projectile::CalcTrail()
+	{
+		double v = m_velocity.Magnitude();
+		double magnitude = 0.5 * Data::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v;
+
+		int xSign = m_velocity.x >= 0 ? -1 : 1;
+		int ySign = m_velocity.y >= 0 ? -1 : 1;
+
+		double theta = acos(m_velocity.y);
+
+		return { magnitude * cos(theta) * xSign, magnitude * sin(theta) * ySign };
+	}
+
+	double Projectile::CalcTrailCoefficient()
+	{
+		return 24.0 / ((Data::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::airViscosity);
+	}
 }
