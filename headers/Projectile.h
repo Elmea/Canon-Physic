@@ -1,11 +1,12 @@
 #pragma once
-
+#include "Maths.h"
+#include "RenderManager.h"
 namespace Core
 {
-	class Projectile
+	class Projectile :RenderObject
 	{
 	private:
-		// Position 
+		Float2 m_position;
 		double m_weight;
 		double m_radius;
 

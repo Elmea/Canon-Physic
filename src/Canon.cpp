@@ -17,7 +17,9 @@ namespace Core
 
 	void Canon::Shoot()
 	{
+		// Create Projectile 
 	}
+
 	void Canon::Draw()
 	{
 	}

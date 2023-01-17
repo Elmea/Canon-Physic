@@ -10,4 +10,10 @@ namespace Core
 	Projectile::~Projectile()
 	{
 	}
+	void Projectile::Update()
+	{
+	}
+	void Projectile::Draw()
+	{
+	}
 }
