@@ -30,7 +30,7 @@ public:
     Float2 operator-(Float2& other);
     Float2 operator*(double& multiplicator);
     Float2 operator/(double divider);
-    
+
     bool operator==(Float2& other) { return (x == other.x) && (y == other.y); }
 
     double Magnitude();

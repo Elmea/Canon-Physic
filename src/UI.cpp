@@ -1,5 +1,6 @@
 #include "UI.h"
 #include "Canon.h"
+#include <iostream>
 
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
@@ -11,14 +12,10 @@ bool UI::SliderDoubleN(const char* text, int nbValues, double* v, double min, do
     return ImGui::SliderScalarN(text, ImGuiDataType_Double, v, nbValues, &min, &max);
 }
 
-bool UI::ClickInRectangle(Vector2 mousePos, Rectangle rec)
+bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 {
-    if (mousePos.x > rec.x && mousePos.x < (rec.x + rec.width))
-        return true;
-    else if (mousePos.y > rec.y && mousePos.y < (rec.y + rec.height))
-        return true;
-    
-    return false;
+    return  (mousePos.x > rec.x && mousePos.x < (double)(rec.x + rec.width )) &&
+            (mousePos.y > rec.y && mousePos.y < (double)(rec.y + rec.height));
 }
 
 void UI::Init()
@@ -73,10 +70,10 @@ void UI::CanonParameters(Core::Canon* canon)
 {
     if (ImGui::TreeNodeEx("Canon parameters "))
     {
-        SliderDouble("Height##Canon", &canon->position.y, 100, 1000);
+        SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
         SliderDouble("Strength##Canon", &canon->power, 0.001, 1000);
         SliderDouble("Shoot direction##Canon", &canon->angle, -45, 45);
-
+        SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
         ImGui::TreePop();
     }
 }
@@ -92,12 +89,54 @@ void UI::WorldParameters(WorldParam& world)
     }
 }
 
-void UI::MoveCannon()
+void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
-    //Vector2 mousePos = GetMousePosition();
-    //if (IsMouseButtonDown(MOUSE_BUTTON_LEFT) && ClickInRectangle(mousePos, destRec))
-    //{
+    if (ImGui::Button("Shoot", ImVec2(150,75)))
+    {
+        canon->Shoot();
+        std::cout << " shoot" << std::endl;
+    }
+}
 
-    //}
+void UI::MoveCannon(Core::Canon* canon)
+{
+    Float2 mousePos = {GetMouseX(),  GetMouseY()};
+
+    if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
+    {
+        if (lastMousePos.x != -100 && lastMousePos.y != -100)
+        {
+            Float2 delta = mousePos - lastMousePos;
+
+            if (ClickInRectangle(mousePos, { 0,0,(float)canon->position.x + 200 , 1080 }))
+            {
+                canon->position.y += delta.y * speedDrag;
+                if (canon->position.y < minHeightCanon)
+                    canon->position.y = minHeightCanon;
+                if (canon->position.y > maxHeightCanon)
+                    canon->position.y = maxHeightCanon;
+            }
+        }
+
+        lastMousePos = mousePos;
+    }
+    else if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+    {
+        Float2 delta = mousePos - lastMousePos;
+
+        if (ClickInRectangle(mousePos, { (float)(canon->position.x - 200.f) ,(float)(canon->position.y - 200), (float)(canon->position.x + canon->size.x + 200) , (float)(canon->position.y + canon->size.y + 200) }))
+        {
+            canon->angle += delta.x * speedDrag;
+            if (canon->angle < minAngleCanon)
+                canon->angle = minAngleCanon;
+            if (canon->angle > maxAngleCanon)
+                canon->angle = maxAngleCanon;
+        }
+        lastMousePos = mousePos;
+    }
+    else
+    {
+        lastMousePos = { -100,-100 };
+    }
 }
 
