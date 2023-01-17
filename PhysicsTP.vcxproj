@@ -169,11 +169,13 @@
     <ClCompile Include="src\App.cpp" />
     <ClCompile Include="src\Canon.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Maths.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="headers\App.h" />
+    <ClInclude Include="headers\Maths.h" />
     <ClInclude Include="headers\SimulationData.h" />
     <ClInclude Include="headers\UI.h" />
     <ClInclude Include="includes\Canon.h" />
