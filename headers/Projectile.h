@@ -3,7 +3,7 @@
 
 namespace Core
 {
-	class Projectile
+	class Projectile : public Renderer::RenderObject
 	{
 	private:
 		Float2 m_pos{ 0, 0};

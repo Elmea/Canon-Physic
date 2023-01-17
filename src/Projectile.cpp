@@ -40,4 +40,5 @@ namespace Core
 		Float2 f = force * deltaTime;
 		m_velocity = m_velocity + f;
 	}
+
 }

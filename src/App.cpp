@@ -1,6 +1,7 @@
 #include "App.h"
 #include "Projectile.h"
 #include "Maths.h"
+#include "Canon.h" 
 
 App::~App()
 {
@@ -31,24 +32,25 @@ void App::Init(int width, int height)
     screenHeight = 1080;
 
     InitWindow(screenWidth, screenHeight, "raylib [core] example - basic window");
-    rlImGuiSetup(true);
-
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
+    m_interface.Init();
+
+    canon = new Core::Canon();;
+    m_objectManager.AddObject(canon);
 }
 
 void App::Update()
 {
     CalcDeltaTime();
 
-    Core::Projectile testProjectile{ Float2{(double)screenWidth/10, (double)6*screenHeight/8}, 15, 5 };
-    testProjectile.AddForce(Float2{ 25 , -50 }, DeltaTime());
+    
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
     {
         CalcDeltaTime();
 
-        testProjectile.Update(DeltaTime());
+       
 
         // Draw
         //----------------------------------------------------------------------------------
@@ -56,19 +58,21 @@ void App::Update()
         ClearBackground(RAYWHITE);
 
         /* Raylib Draws */
-        DrawText("Congrats! You created your first window!", 190, 200, 20, LIGHTGRAY);
-        testProjectile.Draw();
+        m_objectManager.DrawObject();
 
         /* ========================  */
         /* ImGui */
-        rlImGuiBegin();
-        ImGui::Begin("Test");
-        ImGui::Button("button");
-        ImGui::Text("Delta time : %f", DeltaTime());
-        ImGui::Text(testProjectile.GetPos().ToString().c_str());
-        ImGui::End();
+        m_interface.NewFrame();
 
-        rlImGuiEnd();
+        m_interface.NewWindow("MainWindow");
+
+        m_interface.ProjectileParameters();
+        m_interface.CanonParameters(canon);
+        m_interface.WorldParameters(worldSettings);
+
+        m_interface.CloseWindow();
+
+        m_interface.EndFrame();
         /* ========================  */
 
         EndDrawing();
