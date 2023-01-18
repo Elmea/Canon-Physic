@@ -57,7 +57,7 @@ void UI::ProjectileParameters()
 
         }
 
-        if (SliderDouble("Size##Projectile", &sizeP, 1, 10))
+        if (SliderDouble("Size##Projectile", &sizeP, 1, 25))
         {
 
         }

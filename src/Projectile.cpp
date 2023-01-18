@@ -10,7 +10,10 @@ namespace Core
 																			m_frontSurface(PI * ((radius * radius)/16.0))
 	{
 		angle = DEG2RAD * angle;
-		AddForce(Float2{ power * cos(angle), power  * sin(angle) }, App::m_deltaTime) ;
+		std::cout << "Power:  " <<  power <<std::endl;
+		std::cout << "DeltaTime  " << App::m_deltaTime <<std::endl;
+		std::cout << "Vitesse start :  " << std::endl;
+		AddForce(Float2{ power * cos(angle), power  * sin(angle) }, App::m_deltaTime,true) ;
 	}
 
 	Projectile::~Projectile()
@@ -27,7 +30,7 @@ namespace Core
 		}
 
 		//AddForce(CalcTrail(), deltaTime);
-		AddForce(Float2{ 0,Data::WorldSetting::GRAVITY  }, deltaTime);
+		AddForce(Float2{ 0,Data::WorldSetting::GRAVITY  }, deltaTime,false);
 
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;
@@ -47,9 +50,10 @@ namespace Core
 		DrawCircle(m_pos.x, m_pos.y, m_radius, PURPLE);
 	}
 
-	void Projectile::AddForce(Float2 force, double deltaTime)
+	void Projectile::AddForce(Float2 force, double deltaTime, bool debug)
 	{
 		Float2 f = force * deltaTime;
+		if(debug) std::cout << f.ToString() << std::endl;
 		m_velocity = m_velocity + f;
 	}
 
