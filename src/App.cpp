@@ -19,8 +19,8 @@ double App::DeltaTime()
 void App::CalcDeltaTime()
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> now = std::chrono::high_resolution_clock::now();
-    
-    m_deltaTime = std::chrono::duration<double>(now - m_lastFrame).count();
+  
+    m_deltaTime = GetFrameTime();
     m_lastFrame = now;
 }
 
@@ -43,7 +43,6 @@ void App::Init(int width, int height)
 
 void App::Update()
 {
-    CalcDeltaTime();
 
     // Main game loop
     while (!WindowShouldClose())    // Detect window close button or ESC key
@@ -55,12 +54,9 @@ void App::Update()
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        //BeginMode2D(camera);
-        camera.zoom += ((float)GetMouseWheelMove() * 0.05f);
        
         /* Raylib Draws */
         m_objectManager.DrawObject();
-        //EndMode2D();
 
 
         /* ========================  */

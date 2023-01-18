@@ -39,7 +39,7 @@ namespace Core
 
 		void Update(double deltaTime);
 		void Draw();
-		void AddForce(Float2 force, double deltaTime);
+		void AddForce(Float2 force, double deltaTime, bool debug = false);
 		Float2 GetPos() { return m_pos; };
 	};
 }

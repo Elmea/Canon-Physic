@@ -13,7 +13,7 @@ namespace Core
 		m_startPos = position;
 		angle = DEG2RAD * angle;
 		m_vInit = Float2{ power * cos(angle), power * sin(angle) };
-		AddForce(m_vInit, App::m_deltaTime) ;
+		AddForce(m_vInit, App::m_deltaTime, true) ;
 	}
 
 	Projectile::~Projectile()
@@ -40,8 +40,8 @@ namespace Core
 			return;
 		}
 
-		//AddForce(CalcTrail(), deltaTime);
-		AddForce(Float2{ 0,Data::WorldSetting::GRAVITY  }, deltaTime);
+		AddForce(CalcTrail(), deltaTime);
+		AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
 
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;
@@ -53,28 +53,26 @@ namespace Core
 		DrawCircle(m_pos.x, m_pos.y, m_radius, PURPLE);
 	}
 
-	void Projectile::AddForce(Float2 force, double deltaTime)
+	void Projectile::AddForce(Float2 force, double deltaTime, bool debug)
 	{
 		Float2 f = force * deltaTime;
+		if(debug) std::cout << f.ToString() << std::endl;
 		m_velocity = m_velocity + f;
 	}
 
 	Float2 Projectile::CalcTrail()
 	{
 		double v = m_velocity.Magnitude();
-		double magnitude = 0.5 * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v;
+		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v)/ 100;
 
-		int xSign = m_velocity.x >= 0 ? -1 : 1;
-		int ySign = m_velocity.y >= 0 ? -1 : 1;
+		double theta = atan2(m_velocity.y, m_velocity.x);
 
-		double theta = acos(m_velocity.y);
-
-		return { magnitude * cos(theta) * xSign, magnitude * sin(theta) * ySign };
+		return { -(magnitude - (m_weight/1000.0)) * cos(theta), -(magnitude - (m_weight / 1000.0)) * sin(theta) };
 	}
 
 	double Projectile::CalcTrailCoefficient()
 	{
-		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity);
+		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity * 10);
 	}
 
 	void Projectile::DrawProjectilePath()
