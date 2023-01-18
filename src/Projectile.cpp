@@ -26,8 +26,8 @@ namespace Core
 			return;
 		}
 
-		//AddForce(CalcTrail(), deltaTime);
-		AddForce(Float2{ 0,Data::WorldSetting::GRAVITY  }, deltaTime);
+		AddForce(CalcTrail(), deltaTime);
+		AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
 
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;
@@ -56,19 +56,19 @@ namespace Core
 	Float2 Projectile::CalcTrail()
 	{
 		double v = m_velocity.Magnitude();
-		double magnitude = 0.5 * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v;
+		double magnitude = -0.5 * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v / 100;
 
 		int xSign = m_velocity.x >= 0 ? -1 : 1;
 		int ySign = m_velocity.y >= 0 ? -1 : 1;
 
-		double theta = acos(m_velocity.y);
+		double theta = atan2(m_velocity.y, m_velocity.x);
 
-		return { magnitude * cos(theta) * xSign, magnitude * sin(theta) * ySign };
+		return { magnitude * cos(theta), magnitude * sin(theta) };
 	}
 
 	double Projectile::CalcTrailCoefficient()
 	{
-		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity);
+		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity *10);
 	}
 
 	void Projectile::DrawProjectilePath()

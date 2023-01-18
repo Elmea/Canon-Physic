@@ -33,8 +33,8 @@ private :
 	double maxHeightCanon = 1000;
 	double minHeightCanon = 100;
 	
-	double maxAngleCanon = 45;
-	double minAngleCanon = -45;
+	double maxAngleCanon = 75;
+	double minAngleCanon = -90;
 public :
 	void Init();
 	~UI();

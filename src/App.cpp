@@ -55,12 +55,12 @@ void App::Update()
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        BeginMode2D(camera);
+//        BeginMode2D(camera);
         camera.zoom += ((float)GetMouseWheelMove() * 0.05f);
        
         /* Raylib Draws */
         m_objectManager.DrawObject();
-        EndMode2D();
+//        EndMode2D();
 
 
         /* ========================  */
