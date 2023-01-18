@@ -56,19 +56,16 @@ namespace Core
 	Float2 Projectile::CalcTrail()
 	{
 		double v = m_velocity.Magnitude();
-		double magnitude = -0.5 * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v / 100;
-
-		int xSign = m_velocity.x >= 0 ? -1 : 1;
-		int ySign = m_velocity.y >= 0 ? -1 : 1;
+		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v)/ 100;
 
 		double theta = atan2(m_velocity.y, m_velocity.x);
 
-		return { magnitude * cos(theta), magnitude * sin(theta) };
+		return { -(magnitude - (m_weight/1000.0)) * cos(theta), -(magnitude - (m_weight / 1000.0)) * sin(theta) };
 	}
 
 	double Projectile::CalcTrailCoefficient()
 	{
-		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity *10);
+		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity * 10);
 	}
 
 	void Projectile::DrawProjectilePath()
