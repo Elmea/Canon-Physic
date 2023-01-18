@@ -1,6 +1,7 @@
 #include "UI.h"
 #include "Canon.h"
 #include <iostream>
+#include "App.h"
 
 double UI::length = 0;
 double UI::height = 0;
@@ -106,11 +107,20 @@ void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 void UI::ShowValuesBeforeShoot(Core::Canon* canon)
 {
     NewWindow("Pre calculated values");
-    Float2 vZero = { canon->power * cos(canon->angle), canon->power * sin(canon->angle) };
-    double maxW = (2 * vZero.x * (-vZero.y)) / Data::WorldSetting::GRAVITY;
-    double maxH = (vZero.y * vZero.y) / (2 * Data::WorldSetting::GRAVITY);
-    double timeInAir = (2 * (-vZero.y)) / Data::WorldSetting::GRAVITY;
+    /* Setup values */
+    double angle = DEG2RAD * canon->angle;
+    Float2 vZero = { canon->power * cos(angle) , canon->power * sin(angle) };
+    double ySqr = vZero.y * vZero.y;
+    double realHeight = 1080 - canon->position.y;   /* To be determined */
 
+    double delta = sqrt((ySqr) + 2 * Data::WorldSetting::GRAVITY * realHeight);
+
+    /* Calculation */
+    double timeInAir = (vZero.y + delta)/ Data::WorldSetting::GRAVITY;
+    double maxW = timeInAir * vZero.x;
+    double maxH = (ySqr / (2 * Data::WorldSetting::GRAVITY)) + realHeight;
+
+    /* Show values */
     ImGui::Text(TextFormat("Max Horizontal length : %.2f" , maxW     ));
     ImGui::Text(TextFormat("Max Height     length : %.2f" , maxH     ));
     ImGui::Text(TextFormat("Flight time    length : %.2f" , timeInAir));
