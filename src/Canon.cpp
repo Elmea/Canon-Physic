@@ -29,6 +29,7 @@ namespace Core
 
 	void Canon::ShowPredictionShoot()
 	{
+
 	}
 
 	void Canon::Shoot(double radius, double weight)

@@ -2,6 +2,10 @@
 #include "Canon.h"
 #include <iostream>
 
+double UI::length = 0;
+double UI::height = 0;
+double UI::timeAir = 0;
+
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
     return ImGui::SliderScalar(text, ImGuiDataType_Double, v, &min, &max);
@@ -20,6 +24,8 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 
 void UI::Init()
 {
+    
+
     rlImGuiSetup(true);
 }
 
@@ -72,7 +78,7 @@ void UI::CanonParameters(Core::Canon* canon)
     {
         SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
         SliderDouble("Strength##Canon", &canon->power, 5 *(10.0/ Data::WorldSetting::pixelPerMeter), 300 * (10.0 / Data::WorldSetting::pixelPerMeter));
-        SliderDouble("Shoot direction##Canon", &canon->angle, -45, 45);
+        SliderDouble("Shoot direction##Canon", &canon->angle, -90, 90);
         SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
         ImGui::TreePop();
     }
@@ -95,6 +101,21 @@ void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
     if (ImGui::Button("Shoot", ImVec2(150,75)))
         canon->Shoot(sizeP,weight);
+}
+
+void UI::ShowValuesBeforeShoot(Core::Canon* canon)
+{
+    NewWindow("Pre calculated values");
+    Float2 vZero = { canon->power * cos(canon->angle), canon->power * sin(canon->angle) };
+    double maxW = (2 * vZero.x * (-vZero.y)) / Data::WorldSetting::GRAVITY;
+    double maxH = (vZero.y * vZero.y) / (2 * Data::WorldSetting::GRAVITY);
+    double timeInAir = (2 * (-vZero.y)) / Data::WorldSetting::GRAVITY;
+
+    ImGui::Text(TextFormat("Max Horizontal length : %.2f" , maxW     ));
+    ImGui::Text(TextFormat("Max Height     length : %.2f" , maxH     ));
+    ImGui::Text(TextFormat("Flight time    length : %.2f" , timeInAir));
+
+    CloseWindow();
 }
 
 void UI::MoveCannon(Core::Canon* canon)
@@ -140,5 +161,16 @@ void UI::MoveCannon(Core::Canon* canon)
     {
         lastMousePos = { -100,-100 };
     }
+}
+
+void UI::ShowValuesAfterShoot()
+{
+    ImGui::Begin("Real values");
+    
+    ImGui::Text(TextFormat("Real Horizontal length : %.2f", length));
+    ImGui::Text(TextFormat("Real Height length     : %.2f", height));
+    ImGui::Text(TextFormat("Real Flight time       : %.2f", timeAir));
+
+    ImGui::End();
 }
 

@@ -24,7 +24,7 @@ namespace Core
 
 	private:
 		void ShowPredictionShoot();
-
+		
 	public:
 		Canon(Renderer::RendererManager* manager);
 		Canon();

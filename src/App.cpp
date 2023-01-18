@@ -55,12 +55,12 @@ void App::Update()
         BeginDrawing();
         ClearBackground(RAYWHITE);
 
-        BeginMode2D(camera);
+        //BeginMode2D(camera);
         camera.zoom += ((float)GetMouseWheelMove() * 0.05f);
        
         /* Raylib Draws */
         m_objectManager.DrawObject();
-        EndMode2D();
+        //EndMode2D();
 
 
         /* ========================  */
@@ -76,6 +76,9 @@ void App::Update()
         m_interface.WorldParameters();
 
         m_interface.CloseWindow();
+
+        m_interface.ShowValuesBeforeShoot(canon);
+        m_interface.ShowValuesAfterShoot();
 
         m_interface.NewWindow("Game");
         m_interface.Shoot(canon , m_objectManager);

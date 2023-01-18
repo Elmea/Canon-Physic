@@ -3,14 +3,17 @@
 #include "SimulationData.h"
 #include "App.h"
 #include <iostream>
+
 namespace Core
 {
 
 	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle) : m_pos(position), m_radius(radius), m_weight(weight),
 																			m_frontSurface(PI * ((radius * radius)/16.0))
 	{
+		m_startPos = position;
 		angle = DEG2RAD * angle;
-		AddForce(Float2{ power * cos(angle), power  * sin(angle) }, App::m_deltaTime) ;
+		m_vInit = Float2{ power * cos(angle), power * sin(angle) };
+		AddForce(m_vInit, App::m_deltaTime) ;
 	}
 
 	Projectile::~Projectile()
@@ -19,10 +22,21 @@ namespace Core
 	
 	void Projectile::Update(double deltaTime)
 	{
-		DrawProjectilePath();
 		if (m_pos.y >= 1080)
 		{
+			if (!hasHitGround)
+			{
+				m_inAirTime = m_lifeTime;
+				hasHitGround = true;
+				m_endPos = m_pos;
+				m_vFinal = m_velocity;
+
+				UI::length  = m_endPos.x - m_startPos.x;
+				UI::height  = m_endPos.y - m_startPos.y;
+				UI::timeAir = m_inAirTime;
+			}
 			m_pos.y = 1080;
+			DrawProjectilePath();
 			return;
 		}
 
@@ -32,14 +46,6 @@ namespace Core
 		m_lifeTime += deltaTime;
 		Float2 vel = m_velocity;
 		m_pos = m_pos + vel;
-
-		if (m_lifeTime >= m_timeLived)
-		{
-			m_timeLived += 0.1f;
-			m_listPoints.push_back(m_pos);
-		}
-
-	
 	}
 
 	void Projectile::Draw()
@@ -73,13 +79,7 @@ namespace Core
 
 	void Projectile::DrawProjectilePath()
 	{
-		int nbPoints = m_listPoints.size();
-		if (nbPoints < 1) 
-			return;
-
-		for (int i = 0; i < nbPoints -1; i++)
-			DrawLine(m_listPoints[i].x, m_listPoints[i].y, m_listPoints[i + 1].x, m_listPoints[i + 1].y, SKYBLUE);
-
-		DrawLine(m_listPoints[nbPoints - 1].x, m_listPoints[nbPoints - 1].y, m_pos.x, m_pos.y, SKYBLUE);
+		Float2 controlPoint = Float2::LineIntersection(m_startPos, m_vInit, m_endPos, m_vFinal);
+		DrawLineBezierQuad(m_startPos, m_endPos, controlPoint, 2, SKYBLUE);
 	}
 }
