@@ -1,6 +1,11 @@
 #include "UI.h"
 #include "Canon.h"
 #include <iostream>
+#include "App.h"
+
+double UI::length = 0;
+double UI::height = 0;
+double UI::timeAir = 0;
 
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
@@ -20,6 +25,8 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 
 void UI::Init()
 {
+    
+
     rlImGuiSetup(true);
 }
 
@@ -57,7 +64,7 @@ void UI::ProjectileParameters()
 
         }
 
-        if (SliderDouble("Size##Projectile", &sizeP, 1, 25))
+        if (SliderDouble("Size##Projectile", &sizeP, 4, 50))
         {
 
         }
@@ -71,8 +78,8 @@ void UI::CanonParameters(Core::Canon* canon)
     if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
         SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
-        SliderDouble("Strength##Canon", &canon->power, 5 *(10.0/ Data::WorldSetting::pixelPerMeter), 300 * (10.0 / Data::WorldSetting::pixelPerMeter));
-        SliderDouble("Shoot direction##Canon", &canon->angle, -45, 45);
+        SliderDouble("Strength##Canon", &canon->power, 15 *(10.0/ Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter));
+        SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon);
         SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
         ImGui::TreePop();
     }
@@ -83,7 +90,7 @@ void UI::WorldParameters()
     if (ImGui::TreeNodeEx("World config",ImGuiTreeNodeFlags_DefaultOpen ))
     {
         SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
-        SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 10);
+        SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0.0001, 10);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         if (SliderDouble("HorizontalSize", &Data::WorldSetting::horizontalMeterSize, 5.f, 2000.0))
         {
@@ -97,6 +104,30 @@ void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
     if (ImGui::Button("Shoot", ImVec2(150,75)))
         canon->Shoot(sizeP,weight);
+}
+
+void UI::ShowValuesBeforeShoot(Core::Canon* canon)
+{
+    NewWindow("Pre calculated values");
+    /* Setup values */
+    double angle = DEG2RAD * canon->angle;
+    Float2 vZero = { canon->power * cos(angle) , canon->power * sin(angle) };
+    double ySqr = vZero.y * vZero.y;
+    double realHeight = 1080 - canon->position.y;   /* To be determined */
+
+    double delta = sqrt((ySqr) + 2 * Data::WorldSetting::GRAVITY * realHeight);
+
+    /* Calculation */
+    double timeInAir = (vZero.y + delta)/ Data::WorldSetting::GRAVITY;
+    double maxW = timeInAir * vZero.x;
+    double maxH = (ySqr / (2 * Data::WorldSetting::GRAVITY)) + realHeight;
+
+    /* Show values */
+    ImGui::Text(TextFormat("Max Horizontal length : %.2f" , maxW     ));
+    ImGui::Text(TextFormat("Max Height     length : %.2f" , maxH     ));
+    ImGui::Text(TextFormat("Flight time    length : %.2f" , timeInAir));
+
+    CloseWindow();
 }
 
 void UI::MoveCannon(Core::Canon* canon)
@@ -142,5 +173,16 @@ void UI::MoveCannon(Core::Canon* canon)
     {
         lastMousePos = { -100,-100 };
     }
+}
+
+void UI::ShowValuesAfterShoot()
+{
+    ImGui::Begin("Real values");
+    
+    ImGui::Text(TextFormat("Real Horizontal length : %.2f", length));
+    ImGui::Text(TextFormat("Real Height length     : %.2f", height));
+    ImGui::Text(TextFormat("Real Flight time       : %.2f", timeAir));
+
+    ImGui::End();
 }
 

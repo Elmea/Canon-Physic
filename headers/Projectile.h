@@ -11,14 +11,19 @@ namespace Core
 		double m_weight;
 		double m_radius;
 		double m_lifeTime = 0;
+		double m_inAirTime = 0;
 
-		double m_timeLived = 0; /* 0.1f * m_timeLived = the life time  */
+		/* Values for drawing curve */
+		Float2 m_startPos;
+		Float2 m_endPos;
+		bool hasHitGround = false;
+		Float2 m_vInit;
+		Float2 m_vFinal;
+
 		const double m_frontSurface;
 
 
 		Float2 m_velocity{ 0, 0 };
-		std::vector<Float2>m_listPoints;
-
 
 
 		Float2 CalcTrail();
@@ -34,7 +39,7 @@ namespace Core
 
 		void Update(double deltaTime);
 		void Draw();
-		void AddForce(Float2 force, double deltaTime, bool debug);
+		void AddForce(Float2 force, double deltaTime, bool debug = false);
 		Float2 GetPos() { return m_pos; };
 	};
 }

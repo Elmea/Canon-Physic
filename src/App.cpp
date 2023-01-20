@@ -73,6 +73,9 @@ void App::Update()
 
         m_interface.CloseWindow();
 
+        m_interface.ShowValuesBeforeShoot(canon);
+        m_interface.ShowValuesAfterShoot();
+
         m_interface.NewWindow("Game");
         m_interface.Shoot(canon , m_objectManager);
         m_interface.CloseWindow();
