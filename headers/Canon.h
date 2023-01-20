@@ -20,7 +20,7 @@ namespace Core
 		Float2 position = Float2{ 200,100 };
 		double angle = 0;
 		double canonLength = 1;
-		double power = 30;
+		double power = 10;
 
 	private:
 		void ShowPredictionShoot();

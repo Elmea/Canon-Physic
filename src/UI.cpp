@@ -109,12 +109,12 @@ void UI::ShowValuesBeforeShoot(Core::Canon* canon)
     double angle = DEG2RAD * canon->angle;
     Float2 vZero = { canon->power * cos(angle) , canon->power * sin(-angle) };
     double ySqr = vZero.y * vZero.y;
-    double realHeight = canon->position.y;   /* To be determined */
+    double realHeight = canon->position.y / Data::WorldSetting::pixelPerMeter;   /* To be determined */
 
-    double delta = sqrt((ySqr) + 2 * Data::WorldSetting::GRAVITY * realHeight);
+    double delta = sqrt((ySqr) + 2 * -Data::WorldSetting::GRAVITY * realHeight);
 
     /* Calculation */
-    double timeInAir = (vZero.y + delta)/ Data::WorldSetting::GRAVITY;
+    double timeInAir = (vZero.y + delta)/ -Data::WorldSetting::GRAVITY;
     double maxW = timeInAir * vZero.x;
     double maxH = (ySqr / (2.0 * (-Data::WorldSetting::GRAVITY))) + realHeight;
 

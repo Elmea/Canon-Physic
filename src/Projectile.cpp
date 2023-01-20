@@ -11,7 +11,7 @@ namespace Core
 																			m_frontSurface(PI * ((radius * radius)/16.0)), m_manager(_manager)
 	{
 		m_startPos = position;
-		maxHeight = position.y;
+		maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
 		angle = DEG2RAD * angle;
 		m_vInit = Float2{ power * cos(angle), power * sin(-angle) };
 		AddForce(m_vInit, 1 , true) ;
@@ -23,19 +23,16 @@ namespace Core
 	
 	void Projectile::Update(double deltaTime)
 	{
-		
-		m_lifeTime += deltaTime;
-			
 		if (m_pos.y <= 0)
 		{
 			if (!hasHitGround)
 			{
-				m_inAirTime = m_lifeTime;
+				m_inAirTime = m_lifeTime ;
 				hasHitGround = true;
 				m_endPos = m_pos;
 				m_vFinal = m_velocity;
 
-				UI::length  = m_endPos.x - m_startPos.x;
+				UI::length  = m_endPos.x - ( m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
 				UI::height  = maxHeight;
 				UI::timeAir = m_inAirTime;
 			}
@@ -45,7 +42,8 @@ namespace Core
 				m_manager->ShouldRemove(this);
 				return;
 			}
-			
+
+			m_lifeTime += deltaTime;
 			m_pos.y = 0;
 			DrawProjectilePath();
 			return;
@@ -53,7 +51,6 @@ namespace Core
 
 		AddForce(CalcTrail(), deltaTime);
 		AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
-
 		
 		Float2 vel = m_velocity;
 		m_pos = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0 )* (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime ) + m_startPos / Data::WorldSetting::pixelPerMeter;
@@ -62,6 +59,8 @@ namespace Core
 		{
 			maxHeight = m_pos.y;
 		}
+		m_lifeTime += deltaTime;
+
 	}
 
 	void Projectile::Draw()
