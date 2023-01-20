@@ -19,6 +19,30 @@ void Float2::PlanRotation(double angle)
     this->y = tmpx * sin(angle) + this->y * cos(angle);
 }
 
+void Float2::operator+=(const Float2& other)
+{
+    x += other.x;
+    y += other.y;
+}
+
+void Float2::operator-=(const Float2& other)
+{
+    x -= other.x;
+    y -= other.y;
+}
+
+void Float2::operator*=(const Float2& other)
+{
+    x *= other.x;
+    y *= other.y;
+}
+
+void Float2::operator/=(const Float2& other)
+{
+    x /= other.x;
+    y /= other.y;
+}
+
 Float2 Float2::operator+(const Float2& other) const
 {
     Float2 result;
