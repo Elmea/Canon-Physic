@@ -85,8 +85,10 @@ void UI::WorldParameters()
         SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 10);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
-        SliderDouble("Size Repere", &Data::WorldSetting::pixelPerMeter, 0.0001f, 10);
-
+        if (SliderDouble("HorizontalSize", &Data::WorldSetting::horizontalMeterSize, 5.f, 2000.0))
+        {
+            Data::WorldSetting::SetScreen();
+        }
         ImGui::TreePop();
     }
 }

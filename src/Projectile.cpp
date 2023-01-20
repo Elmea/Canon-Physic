@@ -10,10 +10,10 @@ namespace Core
 																			m_frontSurface(PI * ((radius * radius)/16.0))
 	{
 		angle = DEG2RAD * angle;
-		std::cout << "Power:  " <<  power <<std::endl;
-		std::cout << "DeltaTime  " << App::m_deltaTime <<std::endl;
-		std::cout << "Vitesse start :  " << std::endl;
-		AddForce(Float2{ power * cos(angle), power  * sin(angle) }, App::m_deltaTime,true) ;
+		double powerHorizontal = ((power * cos(angle) )/ Data::WorldSetting::horizontalMeterSize) * 1920.0;
+		double powerVertical = ((power * sin(angle) )/ Data::WorldSetting::verticalMeterSize) * 1080.0;
+
+		AddForce(Float2{ powerHorizontal, powerVertical }, App::m_deltaTime,true) ;
 	}
 
 	Projectile::~Projectile()
@@ -30,10 +30,12 @@ namespace Core
 		}
 
 		//AddForce(CalcTrail(), deltaTime);
-		AddForce(Float2{ 0,Data::WorldSetting::GRAVITY  }, deltaTime,false);
+		double powerVertical = ((Data::WorldSetting::GRAVITY) / Data::WorldSetting::verticalMeterSize) * 1080.0;
+		AddForce(Float2{ 0,powerVertical }, App::m_deltaTime,false);
 
 		m_lifeTime += deltaTime;
-		Float2 vel = m_velocity;
+		Float2 vel = m_velocity ;
+		Float2 vel2 = Float2{ m_velocity.x * 60 , m_velocity.y * 60};
 		m_pos = m_pos + vel;
 
 		if (m_lifeTime >= m_timeLived)
@@ -53,7 +55,6 @@ namespace Core
 	void Projectile::AddForce(Float2 force, double deltaTime, bool debug)
 	{
 		Float2 f = force * deltaTime;
-		if(debug) std::cout << f.ToString() << std::endl;
 		m_velocity = m_velocity + f;
 	}
 
