@@ -4,6 +4,7 @@
 #include "RenderManager.h"
 #include "Maths.h"
 #include "SimulationData.h"
+#include "map"
 
 namespace Core
 {
@@ -16,6 +17,13 @@ struct WorldParam
 	double airViscosity = 15.6;
 	double GRAVITY = 9.80665f;
 	double pixelPerMeter = 10;
+};
+
+struct ProjectileParameters
+{
+	Float2 velocity;
+	Float2 position;
+	double currentLifeTime;
 };
 
 class UI
@@ -40,6 +48,8 @@ public :
 	static double length;
 	static double height;
 	static double timeAir;
+
+	static std::map<int , ProjectileParameters> projectileParameters;
 
 	void Init();
 	~UI();

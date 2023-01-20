@@ -3,42 +3,46 @@
 #include "SimulationData.h"
 #include "App.h"
 #include <iostream>
+#include "Ui.h"
 
 namespace Core
 {
+	double Projectile::lifeTimeAfterCollision = 2.5f;
 
-	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle, Renderer::RendererManager* _manager) : m_pos(position), m_radius(radius), m_weight(weight),
-																			m_frontSurface(PI * ((radius * radius)/16.0)), m_manager(_manager)
+	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
+		m_frontSurface(PI* ((radius* radius) / 16.0)), m_manager(_manager), m_id(_id)
 	{
 		m_startPos = position;
-		maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
+		m_maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
 		angle = DEG2RAD * angle;
 		m_vInit = Float2{ power * cos(angle), power * sin(-angle) };
-		AddForce(m_vInit, 1 , true) ;
+		AddForce(m_vInit, 1, true);
 	}
 
 	Projectile::~Projectile()
 	{
 	}
-	
+
 	void Projectile::Update(double deltaTime)
 	{
+		
 		if (m_pos.y <= 0)
 		{
-			if (!hasHitGround)
+			if (!m_hasHitGround)
 			{
-				m_inAirTime = m_lifeTime ;
-				hasHitGround = true;
+				m_inAirTime = m_lifeTime;
+				m_hasHitGround = true;
 				m_endPos = m_pos;
 				m_vFinal = m_velocity;
 
-				UI::length  = m_endPos.x - ( m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
-				UI::height  = maxHeight;
+				UI::length = m_endPos.x - (m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
+				UI::height = m_maxHeight;
 				UI::timeAir = m_inAirTime;
 			}
 
-			if (m_lifeTime - m_inAirTime > 2)
+			if (m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
 			{
+				//UI::projectileParameters.erase(std::remove(UI::projectileParameters.begin(), UI::projectileParameters.end(), std::make_pair(ProjectileParameters{ m_velocity , m_pos, m_lifeTime - m_inAirTime }, m_id)), UI::projectileParameters.end());
 				m_manager->ShouldRemove(this);
 				return;
 			}
@@ -48,6 +52,13 @@ namespace Core
 			DrawProjectilePath();
 			return;
 		}
+		//auto it = UI::projectileParameters.find(m_id);
+		//if (it != UI::projectileParameters.end())
+		//{
+		//	UI::projectileParameters.
+		//}
+
+		//UI::projectileParameters.push_back(std::make_pair(ProjectileParameters{m_velocity , m_pos, m_lifeTime - m_inAirTime } , m_id));
 
 		AddForce(CalcTrail(), deltaTime);
 		AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
@@ -55,9 +66,9 @@ namespace Core
 		Float2 vel = m_velocity;
 		m_pos = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0 )* (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime ) + m_startPos / Data::WorldSetting::pixelPerMeter;
 		
-		if (m_pos.y >= maxHeight)
+		if (m_pos.y >= m_maxHeight)
 		{
-			maxHeight = m_pos.y;
+			m_maxHeight = m_pos.y;
 		}
 		m_lifeTime += deltaTime;
 

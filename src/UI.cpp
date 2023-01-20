@@ -2,10 +2,12 @@
 #include "Canon.h"
 #include <iostream>
 #include "App.h"
+#include "Projectile.h"
 
 double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
+std::map<int, ProjectileParameters> UI::projectileParameters = {};
 
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
@@ -59,17 +61,10 @@ void UI::ProjectileParameters()
 
     if (ImGui::TreeNodeEx("Projectile parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        if (SliderDouble("Weight##Projectile", &weight, 0.0001, 1000))
-        {
-
-        }
-
-        if (SliderDouble("Size##Projectile", &sizeP, 4, 50))
-        {
-
-        }
+        SliderDouble("Weight##Projectile", &weight, 0.0001, 1000);
+        SliderDouble("Size##Projectile", &sizeP, 4, 50);
+        SliderDouble("Life Time##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
         ImGui::TreePop();
-
     }
 }
 
