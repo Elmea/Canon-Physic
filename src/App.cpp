@@ -27,7 +27,7 @@ void App::CalcDeltaTime()
 
 
 
-void App::Init(int width = 1920 , int height = 1080)
+void App::Init(int width , int height)
 {
 	m_height = height;
 	m_width = width;
@@ -35,7 +35,9 @@ void App::Init(int width = 1920 , int height = 1080)
     InitWindow(m_width, m_height, "raylib [core] example - basic window");
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
     m_interface.Init();
+    CalcDeltaTime();
 
+    canon = new Core::Canon{ &m_objectManager };
     m_objectManager.AddObject(canon);
 }
 
@@ -60,7 +62,6 @@ void App::Draw()
 void App::Run()
 {
 
-    // Main game loop
     while (!WindowShouldClose())   
     {
         Update();

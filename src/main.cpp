@@ -5,7 +5,7 @@ int main(int argc, char* argv[])
 {
 
     App* app = new App;
-    app->Init(1920, 1080);
+    app->Init();
     app->Run();
    
     return 0;
