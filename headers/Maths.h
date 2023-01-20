@@ -28,6 +28,11 @@ public:
 
     void PlanRotation(double angle);
 
+    void operator+=(const Float2& other);
+    void operator-=(const Float2& other);
+    void operator*=(const Float2& other);
+    void operator/=(const Float2& other);
+
     Float2 operator+(const Float2& other) const;
     Float2 operator-(const Float2& other) const;
     Float2 operator*(const double& multiplicator)const ;

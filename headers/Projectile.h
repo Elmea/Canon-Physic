@@ -19,6 +19,7 @@ namespace Core
 		bool hasHitGround = false;
 		Float2 m_vInit;
 		Float2 m_vFinal;
+		double maxHeight;
 
 		const double m_frontSurface;
 
@@ -30,8 +31,9 @@ namespace Core
 		double CalcTrailCoefficient();
 		void DrawProjectilePath();
 
+		Renderer::RendererManager* m_manager;
 	public:
-		Projectile(Float2 position, double radius, double weight, double power, double angle);
+		Projectile(Float2 position, double radius, double weight, double power, double angle , Renderer::RendererManager* _manager);
 		~Projectile();
 
 		double& GetWeightRef() { return m_weight; }

@@ -4,11 +4,9 @@ namespace Data
 {
 	 double WorldSetting::airResistance = 0.1;
 	 double WorldSetting::airViscosity = 15.6;
-	 double WorldSetting::GRAVITY = 9.80665f;
-	 double WorldSetting::pixelPerMeter = 10;
-	 double WorldSetting::horizontalMeterSize = 100;
-	 double WorldSetting::verticalMeterSize = 100;
-	 double WorldSetting::m_ratioScreen = 1080.0 / 1920.0;;
+	 double WorldSetting::GRAVITY = -9.80665f;
+	 double WorldSetting::pixelPerMeter = 100;
+	 Float2 WorldSetting::originSystem = { 0, 1080 };
 
 	WorldSetting::WorldSetting()
 	{
@@ -18,8 +16,14 @@ namespace Data
 	WorldSetting::~WorldSetting()
 	{
 	}
-	void WorldSetting::SetScreen()
+
+	Float2 WorldSetting::GetRaylibPos(const Float2& pos)
 	{
-		verticalMeterSize = m_ratioScreen * horizontalMeterSize;
+		return { pos.x , originSystem.y - pos.y };
+	}
+
+	Float2 WorldSetting::GetRaylibSpeed(const Float2& speed)
+	{
+		return { speed.x, speed.y * -1 };
 	}
 }

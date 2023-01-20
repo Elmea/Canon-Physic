@@ -92,10 +92,6 @@ void UI::WorldParameters()
         SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0.0001, 10);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
-        if (SliderDouble("HorizontalSize", &Data::WorldSetting::horizontalMeterSize, 5.f, 2000.0))
-        {
-            Data::WorldSetting::SetScreen();
-        }
         ImGui::TreePop();
     }
 }
@@ -111,16 +107,16 @@ void UI::ShowValuesBeforeShoot(Core::Canon* canon)
     NewWindow("Pre calculated values");
     /* Setup values */
     double angle = DEG2RAD * canon->angle;
-    Float2 vZero = { canon->power * cos(angle) , canon->power * sin(angle) };
+    Float2 vZero = { canon->power * cos(angle) , canon->power * sin(-angle) };
     double ySqr = vZero.y * vZero.y;
-    double realHeight = 1080 - canon->position.y;   /* To be determined */
+    double realHeight = canon->position.y;   /* To be determined */
 
     double delta = sqrt((ySqr) + 2 * Data::WorldSetting::GRAVITY * realHeight);
 
     /* Calculation */
     double timeInAir = (vZero.y + delta)/ Data::WorldSetting::GRAVITY;
     double maxW = timeInAir * vZero.x;
-    double maxH = (ySqr / (2 * Data::WorldSetting::GRAVITY)) + realHeight;
+    double maxH = (ySqr / (2.0 * (-Data::WorldSetting::GRAVITY))) + realHeight;
 
     /* Show values */
     ImGui::Text(TextFormat("Max Horizontal length : %.2f" , maxW     ));
@@ -139,6 +135,7 @@ void UI::MoveCannon(Core::Canon* canon)
         if (lastMousePos.x != -100 && lastMousePos.y != -100)
         {
             Float2 delta = mousePos - lastMousePos;
+            delta.y *= -1;
 
             if (ClickInRectangle(mousePos, { 0,0,(float)canon->position.x + 200 , 1080 }))
             {
@@ -158,7 +155,9 @@ void UI::MoveCannon(Core::Canon* canon)
         {
             Float2 delta = mousePos - lastMousePos;
 
-            if (ClickInRectangle(mousePos, { (float)(canon->position.x - 200.f) ,(float)(canon->position.y - 200), (float)(canon->position.x + canon->size.x + 200) , (float)(canon->position.y + canon->size.y + 200) }))
+            Float2 posRaylib = Data::WorldSetting::GetRaylibPos(canon->position);
+
+            if (ClickInRectangle(mousePos, { (float)(canon->position.x - 200.f) ,(float)(posRaylib.y - 200), (float)(canon->position.x + canon->size.x + 200) , (float)(posRaylib.y + canon->size.y + 200) }))
             {
                 canon->angle += delta.y * speedDrag;
                 if (canon->angle < minAngleCanon)

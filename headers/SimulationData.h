@@ -12,9 +12,10 @@ namespace Data
 		static double airViscosity;
 		static double GRAVITY;
 		static double pixelPerMeter;
-		static double horizontalMeterSize;
-		static double verticalMeterSize;
-		static void SetScreen();
+		static Float2 originSystem;
+
+		static Float2 GetRaylibPos(const Float2& pos);
+		static Float2 GetRaylibSpeed(const Float2& speed);
 	private:
 		static double m_ratioScreen;
 

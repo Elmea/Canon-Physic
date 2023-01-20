@@ -1,6 +1,7 @@
 #include "Canon.h"
 #include "raylib.h"
 #include "Projectile.h"
+#include "SimulationData.h"
 
 namespace Core
 {
@@ -34,7 +35,7 @@ namespace Core
 
 	void Canon::Shoot(double radius, double weight)
 	{
-		Projectile* pProjectile = new Projectile(position, radius, weight, power, angle);
+		Projectile* pProjectile = new Projectile(position, radius, weight, power, angle, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
 	}
 
@@ -44,10 +45,12 @@ namespace Core
 
 	void Canon::Draw()
 	{
+		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(position);
+
 		// Source rectangle (part of the texture to use for drawing)
 		Rectangle sourceRec = { 0.0f, 0.0f, (float)size.x, (float)size.y };
 		// Destination rectangle (screen rectangle where drawing part of texture)
-		Rectangle destRec = { position.x, position.y, size.x , size.y };
+		Rectangle destRec = { raylibPos.x, raylibPos.y, size.x , size.y };
 
 		// Origin of the texture (rotation/scale point), it's relative to destination rectangle size
 		Vector2 origin = { (float)size.x / 2, (float)size.y / 2 };
@@ -57,6 +60,6 @@ namespace Core
 		DrawTexture(m_cannonBaseTex, destRec.x - (float)size.x / 2 + 25, destRec.y, WHITE);
 
 		/* Draw support of the cannon */
-		DrawRectangle(destRec.x - (float)size.x / 2, position.y + m_cannonBaseTex.height, (float)size.x, 1080, BLACK);
+		DrawRectangle(destRec.x - (float)size.x / 2, raylibPos.y + m_cannonBaseTex.height, (float)size.x, 1080, BLACK);
 	}
 }
