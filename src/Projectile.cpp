@@ -10,11 +10,11 @@ namespace Core
 	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle, Renderer::RendererManager* _manager) : m_pos(position), m_radius(radius), m_weight(weight),
 																			m_frontSurface(PI * ((radius * radius)/16.0)), m_manager(_manager)
 	{
-		m_startPos = position;
+		rigidbody.SetPos(position);
 		maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
 		angle = DEG2RAD * angle;
 		m_vInit = Float2{ power * cos(angle), power * sin(-angle) };
-		AddForce(m_vInit, 1 , true) ;
+		AddForce(m_vInit, Core::ForceType::FT_SPEED);
 	}
 
 	Projectile::~Projectile()
@@ -49,12 +49,14 @@ namespace Core
 			return;
 		}
 
-		AddForce(CalcTrail(), deltaTime);
-		AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
+		AddForce(CalcTrail(), Core::ForceType::FT_SPEED);
+		AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, Core::ForceType::FT_ACCELERATION);
 		
-		Float2 vel = m_velocity;
-		m_pos = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0 )* (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime ) + m_startPos / Data::WorldSetting::pixelPerMeter;
-		
+		rigidbody.Update(deltaTime);
+
+		// m_pos = ( Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0 )* (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime ) + m_startPos / Data::WorldSetting::pixelPerMeter;
+		m_pos = rigidbody.GetPos();
+
 		if (m_pos.y >= maxHeight)
 		{
 			maxHeight = m_pos.y;
@@ -69,11 +71,9 @@ namespace Core
 		DrawCircle(raylibPos.x, raylibPos.y, m_radius, PURPLE);
 	}
 
-	void Projectile::AddForce(Float2 force, double deltaTime, bool debug)
+	void Projectile::AddForce(Float2 force, Core::ForceType type)
 	{
-		Float2 f = force * deltaTime;
-		if(debug) std::cout << f.ToString() << std::endl;
-		m_velocity = m_velocity + f;
+		rigidbody.AddForce(force, type);
 	}
 
 	Float2 Projectile::CalcTrail()

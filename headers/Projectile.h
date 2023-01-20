@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Rigidbody.h"
 #include "RenderManager.h"
 
 namespace Core
@@ -23,9 +24,8 @@ namespace Core
 
 		const double m_frontSurface;
 
-
 		Float2 m_velocity{ 0, 0 };
-
+		Rigidbody rigidbody;
 
 		Float2 CalcTrail();
 		double CalcTrailCoefficient();
@@ -41,7 +41,7 @@ namespace Core
 
 		void Update(double deltaTime);
 		void Draw();
-		void AddForce(Float2 force, double deltaTime, bool debug = false);
+		void AddForce(Float2 force, Core::ForceType type);
 		Float2 GetPos() { return m_pos; };
 	};
 }
