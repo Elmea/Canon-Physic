@@ -34,6 +34,32 @@ UI::~UI()
 {
 }
 
+
+
+void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
+{
+    ShowFPS();
+    NewFrame();
+
+    MoveCannon(canon);
+    NewWindow("MainWindow");
+
+    ProjectileParameters();
+    CanonParameters(canon);
+    WorldParameters();
+
+    CloseWindow();
+
+    ShowValuesBeforeShoot(canon);
+    ShowValuesAfterShoot();
+
+    NewWindow("Game");
+    Shoot(canon, objectManager);
+    CloseWindow();
+
+    EndFrame();
+}
+
 void UI::NewFrame() 
 {
     rlImGuiBegin();
