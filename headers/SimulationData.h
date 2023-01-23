@@ -3,6 +3,9 @@
 
 namespace Data
 {
+
+
+
 	class WorldSetting
 	{
 	public:

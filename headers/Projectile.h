@@ -29,6 +29,7 @@ namespace Core
 		Float2 CalcTrail();
 		double CalcTrailCoefficient();
 		void DrawProjectilePath();
+		void TouchGround(double deltaTime);
 
 		Renderer::RendererManager* m_manager;
 	public:

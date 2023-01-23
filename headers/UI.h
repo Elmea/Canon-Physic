@@ -11,19 +11,23 @@ namespace Core
 	class Canon;
 }
 
-struct WorldParam
-{
-	double airResistance = 0.1;
-	double airViscosity = 15.6;
-	double GRAVITY = 9.80665f;
-	double pixelPerMeter = 10;
-};
-
 struct ProjectileParameters
 {
 	Float2 velocity;
 	Float2 position;
 	double currentLifeTime;
+	bool shouldDie = true;
+	bool controlPos = false;
+
+	bool operator==(const ProjectileParameters& o) {
+		return velocity == o.velocity && position == o.position && currentLifeTime == o.currentLifeTime;
+	}
+
+	void operator=(const ProjectileParameters& o) {
+		velocity = o.velocity;
+		position = o.position;
+		currentLifeTime = o.currentLifeTime;
+	}
 };
 
 class UI
@@ -66,6 +70,8 @@ public :
 	void ProjectileParameters();
 	void CanonParameters(Core::Canon* canon);
 	void WorldParameters();
+	void CurrentProjectileParam();
+
 	void Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager);
 
 	void ShowValuesBeforeShoot(Core::Canon* canon);

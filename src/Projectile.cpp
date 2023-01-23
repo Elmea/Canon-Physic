@@ -25,24 +25,16 @@ namespace Core
 
 	void Projectile::Update(double deltaTime)
 	{
-		
+		UI::projectileParameters[m_id].currentLifeTime = m_lifeTime - m_inAirTime;
+
 		if (m_pos.y <= 0)
 		{
 			if (!m_hasHitGround)
+				TouchGround(deltaTime);
+			
+			if (UI::projectileParameters[m_id].shouldDie && m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
 			{
-				m_inAirTime = m_lifeTime;
-				m_hasHitGround = true;
-				m_endPos = m_pos;
-				m_vFinal = m_velocity;
-
-				UI::length = m_endPos.x - (m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
-				UI::height = m_maxHeight;
-				UI::timeAir = m_inAirTime;
-			}
-
-			if (m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
-			{
-				//UI::projectileParameters.erase(std::remove(UI::projectileParameters.begin(), UI::projectileParameters.end(), std::make_pair(ProjectileParameters{ m_velocity , m_pos, m_lifeTime - m_inAirTime }, m_id)), UI::projectileParameters.end());
+				UI::projectileParameters.erase(m_id);
 				m_manager->ShouldRemove(this);
 				return;
 			}
@@ -52,26 +44,27 @@ namespace Core
 			DrawProjectilePath();
 			return;
 		}
-		//auto it = UI::projectileParameters.find(m_id);
-		//if (it != UI::projectileParameters.end())
-		//{
-		//	UI::projectileParameters.
-		//}
 
-		//UI::projectileParameters.push_back(std::make_pair(ProjectileParameters{m_velocity , m_pos, m_lifeTime - m_inAirTime } , m_id));
+		if (!UI::projectileParameters[m_id].controlPos)
+		{
+			AddForce(CalcTrail(), deltaTime);
+			AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
 
-		AddForce(CalcTrail(), deltaTime);
-		AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
-		
-		Float2 vel = m_velocity;
-		m_pos = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0 )* (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime ) + m_startPos / Data::WorldSetting::pixelPerMeter;
+			Float2 vel = m_velocity;
+			m_pos = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0) * (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime) + m_startPos / Data::WorldSetting::pixelPerMeter;
+		}
+		else
+		{
+			m_pos = UI::projectileParameters[m_id].position;
+		}
 		
 		if (m_pos.y >= m_maxHeight)
-		{
 			m_maxHeight = m_pos.y;
-		}
+
 		m_lifeTime += deltaTime;
 
+		UI::projectileParameters[m_id].position = m_pos;
+		UI::projectileParameters[m_id].velocity = m_velocity;
 	}
 
 	void Projectile::Draw()
@@ -114,5 +107,17 @@ namespace Core
 
 		Float2 controlPoint = Float2::LineIntersection(raylibSPos, raylibSZero, raylibEPos, raylibSEnd);
 		DrawLineBezierQuad(raylibSPos, raylibEPos, controlPoint, 2, SKYBLUE);
+	}
+
+	void Projectile::TouchGround(double deltaTime)
+	{
+		m_inAirTime = m_lifeTime;
+		m_hasHitGround = true;
+		m_endPos = m_pos;
+		m_vFinal = m_velocity;
+
+		UI::length = m_endPos.x - (m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
+		UI::height = m_maxHeight;
+		UI::timeAir = m_inAirTime;
 	}
 }

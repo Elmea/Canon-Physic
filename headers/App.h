@@ -17,7 +17,6 @@ private :
 	Renderer::RendererManager m_objectManager;
 
 	UI m_interface;
-	WorldParam worldSettings;
 	Core::Canon* canon;
 
 	Camera2D camera = { 0 };
