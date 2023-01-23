@@ -13,7 +13,7 @@ namespace Core
 
 		Texture2D m_canonTex;
 		Texture2D m_cannonBaseTex;
-		Renderer::RendererManager* m_renderManager;
+		Renderer::RendererManager* m_renderManager = nullptr;
 
 	public:
 		Float2 size;

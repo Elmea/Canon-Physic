@@ -107,6 +107,7 @@ void UI::CanonParameters(Core::Canon* canon)
         SliderDouble("Strength##Canon", &canon->power, 15 *(10.0/ Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter));
         SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon);
         SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
+        SliderDouble("Canon Lengh", &canon->canonLength, 1, 10);
         ImGui::TreePop();
     }
 }
