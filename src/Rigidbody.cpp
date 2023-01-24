@@ -1,24 +1,23 @@
+#include <iostream>
+
 #include "Rigidbody.h"
+#include "SimulationData.h"
 
 using namespace Core;
 
-void Rigidbody::Update(double deltaTime)
+void Rigidbody::Update(double deltaTime, double lifeTime)
 {
-	double temp = 0.5 * deltaTime * deltaTime;
 	for (Float2 force : m_AccelerationForces)
 	{
-		m_velocity = m_velocity + force * deltaTime; 
-		m_pos = m_pos + force * temp;
+		m_velocity += force * deltaTime;
 	}
 
 	for (Float2 force : m_speedForces)
 	{
-		m_velocity = m_velocity + force;
-		m_pos = m_pos + force * deltaTime;
+		m_velocity += force;
 	}
 
-	m_AccelerationForces.clear();
-	m_speedForces.clear();
+	m_pos += m_velocity * deltaTime;
 }
 
 void Rigidbody::AddForce(Float2 force, ForceType type)
@@ -31,14 +30,18 @@ void Rigidbody::AddForce(Float2 force, ForceType type)
 	case ForceType::FT_ACCELERATION:
 		m_AccelerationForces.push_back(force);
 		break;
+	case ForceType::FT_INSTANT:
+		m_InstantForces.push_back(force);
+		break;
 	default:
 		break;
 	}
 }
 
-void Rigidbody::SetPos(Float2 position)
+void Rigidbody::SetStartPos(Float2 position)
 {
 	m_pos = position;
+	m_startPos = position;
 }
 
 Float2 Rigidbody::GetPos()
@@ -49,4 +52,36 @@ Float2 Rigidbody::GetPos()
 Float2 Rigidbody::GetVelocity()
 {
 	return m_velocity;
+}
+
+void Rigidbody::DrawForces()
+{
+	Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
+	for (Float2 force : m_AccelerationForces)
+	{
+		Float2 raylibPosForce{ force.x * 10 , -force.y * 10 };
+		DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, ORANGE);
+	}
+
+	for (Float2 force : m_speedForces)
+	{
+		Float2 raylibPosForce{ force.x * 1000 , -force.y * 1000 };
+		DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, BLUE);
+	}
+
+	for (Float2 force : m_InstantForces)
+	{
+		Float2 raylibPosForce{ force.x * 1000 , -force.y * 1000 };
+		DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, GREEN);
+	}
+
+	Float2 raylibPosForce{ m_velocity.x * 10 , -m_velocity.y * 10 };
+	DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, RED);
+}
+
+void Rigidbody::ClearForces()
+{
+	m_AccelerationForces.clear();
+	m_speedForces.clear();
+	m_InstantForces.clear();
 }
