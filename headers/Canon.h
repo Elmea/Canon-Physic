@@ -16,16 +16,25 @@ namespace Core
 		Texture2D m_cannonBaseTex;
 		Renderer::RendererManager* m_renderManager;
 
+		Float2 posImpact;
+		Float2 speedZero;
+		Float2 speedImpact;
+
 	public:
 		Float2 size;
 		Float2 position = Float2{ 200,100 };
 		double angle = 0;
 		double canonLength = 1;
 		double power = 10;
+		double timeInAir; 
+		double maxW;
+		double maxH;
 
+		bool valueChanged = true;
 	private:
 		void ShowPredictionShoot();
-		
+		void DrawCurvePrediction();
+
 	public:
 		Canon(Renderer::RendererManager* manager);
 		Canon();
