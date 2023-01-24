@@ -172,6 +172,7 @@
     <ClCompile Include="src\Maths.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\RenderManager.cpp" />
+    <ClCompile Include="src\Rigidbody.cpp" />
     <ClCompile Include="src\SimulateData.cpp" />
     <ClCompile Include="src\UI.cpp" />
   </ItemGroup>
@@ -181,6 +182,7 @@
     <ClInclude Include="headers\Maths.h" />
     <ClInclude Include="headers\Projectile.h" />
     <ClInclude Include="headers\RenderManager.h" />
+    <ClInclude Include="headers\Rigidbody.h" />
     <ClInclude Include="headers\SimulationData.h" />
     <ClInclude Include="headers\UI.h" />
     <ClInclude Include="includes\raylib.h" />
