@@ -30,9 +30,6 @@ void Rigidbody::AddForce(Float2 force, ForceType type)
 	case ForceType::FT_ACCELERATION:
 		m_AccelerationForces.push_back(force);
 		break;
-	case ForceType::FT_INSTANT:
-		m_InstantForces.push_back(force);
-		break;
 	default:
 		break;
 	}
@@ -41,7 +38,6 @@ void Rigidbody::AddForce(Float2 force, ForceType type)
 void Rigidbody::SetStartPos(Float2 position)
 {
 	m_pos = position;
-	m_startPos = position;
 }
 
 Float2 Rigidbody::GetPos()
@@ -67,12 +63,6 @@ void Rigidbody::DrawForces()
 	{
 		Float2 raylibPosForce{ force.x * 1000 , -force.y * 1000 };
 		DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, BLUE);
-	}
-
-	for (Float2 force : m_InstantForces)
-	{
-		Float2 raylibPosForce{ force.x * 1000 , -force.y * 1000 };
-		DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, GREEN);
 	}
 
 	Float2 raylibPosForce{ m_velocity.x * 10 , -m_velocity.y * 10 };

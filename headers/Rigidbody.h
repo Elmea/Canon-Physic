@@ -8,21 +8,17 @@ namespace Core
 	enum class ForceType
 	{
 		FT_SPEED,
-		FT_ACCELERATION,
-		FT_INSTANT
+		FT_ACCELERATION
 	};
 
 	class Rigidbody
 	{
 	private:
-		Float2 m_startPos{ 0, 0 };
 		Float2 m_pos{ 0, 0 };
 		Float2 m_velocity{ 0, 0 };
-		Float2 m_speed{ 0, 0 };
 
 		std::vector<Float2> m_speedForces;
 		std::vector<Float2> m_AccelerationForces;
-		std::vector<Float2> m_InstantForces;
 
 		// Temp 
 		Float2 gravityVal ;
