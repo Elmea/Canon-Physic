@@ -73,5 +73,4 @@ void Rigidbody::ClearForces()
 {
 	m_AccelerationForces.clear();
 	m_speedForces.clear();
-	m_InstantForces.clear();
 }
