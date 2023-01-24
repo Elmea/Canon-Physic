@@ -65,7 +65,7 @@ void Rigidbody::DrawForces()
 		DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, BLUE);
 	}
 
-	Float2 raylibPosForce{ m_velocity.x * 10 , -m_velocity.y * 10 };
+	Float2 raylibPosForce{ m_velocity.x * 15 , -m_velocity.y * 15 };
 	DrawLine(raylibPos.x, raylibPos.y, raylibPos.x + raylibPosForce.x, raylibPos.y + raylibPosForce.y, RED);
 }
 
