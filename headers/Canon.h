@@ -33,7 +33,7 @@ namespace Core
 		double maxW;
 		double maxH;
 		double weight = 100;
-		bool isCollisionActive;
+		bool isCollisionActive = true;
 		bool valueChanged = true;
 	private:
 		void ShowPredictionShoot();
@@ -47,6 +47,7 @@ namespace Core
 		Canon();
 		~Canon();
 
+		void ResetPosition();
 		void ActivateShootPrediction(bool state) { m_activeShootPrediction = state; };
 		Float2 GetInitPos() { return initPos; }
 

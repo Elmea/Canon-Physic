@@ -20,6 +20,7 @@ namespace Core
 		m_maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
 		m_vInit = projSpeedZero;
 		AddForce(m_vInit, Core::ForceType::FT_SPEED);
+		m_trajectoryPosition.push_back(Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter));
 	}
 
 	Projectile::~Projectile()
@@ -45,13 +46,14 @@ namespace Core
 
 		UI::projectileParameters[m_id].position = m_pos;
 		UI::projectileParameters[m_id].velocity = m_velocity;
+		
 	}
 
 	void Projectile::Draw()
 	{
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
 		DrawCircle(raylibPos.x, raylibPos.y, m_radius, YELLOW);
-		if(m_hasHitGround)DrawProjectilePath();
+		DrawProjectilePath();
 		
 	}
 
@@ -91,13 +93,8 @@ namespace Core
 
 	void Projectile::DrawProjectilePath()
 	{
-		Float2 raylibSPos = Data::WorldSetting::GetRaylibPos(m_startPos);
-		Float2 raylibEPos = Data::WorldSetting::GetRaylibPos(m_endPos * Data::WorldSetting::pixelPerMeter);
-		Float2 raylibSZero = Data::WorldSetting::GetRaylibSpeed(m_vInit);
-		Float2 raylibSEnd = Data::WorldSetting::GetRaylibSpeed(m_vFinal);
-
-		Float2 controlPoint = Float2::LineIntersection(raylibSPos, raylibSZero, raylibEPos, raylibSEnd);
-		DrawLineBezierQuad(raylibSPos, raylibEPos, controlPoint, 2, ORANGE);
+	
+		DrawLineStrip(&m_trajectoryPosition[0],m_trajectoryPosition.size(), RED);
 	}
 
 	void Projectile::TouchGround(double deltaTime)
@@ -110,14 +107,17 @@ namespace Core
 		UI::length = m_endPos.x - (m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
 		UI::height = m_maxHeight;
 		UI::timeAir = m_inAirTime;
+		m_trajectoryPosition.push_back(Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter));
 
 		
 	}
+
+	
 	void Projectile::Move(double deltaTime)
 	{
-	
 		if (!UI::projectileParameters[m_id].controlPos)
 		{
+			RegisterPosition();
 			m_velocity = rigidbody.GetVelocity();
 
 			rigidbody.AddForce(CalcTrail(), Core::ForceType::FT_SPEED);
@@ -131,7 +131,10 @@ namespace Core
 		{
 			m_pos = UI::projectileParameters[m_id].position;
 		}
+
+		m_frameCount++;
 	}
+
 	void Projectile::ImpactReaction(double deltaTime)
 	{
 		if (!m_hasHitGround)
@@ -144,8 +147,6 @@ namespace Core
 			m_manager->ShouldRemove(this);
 			return;
 		}
-
-		DrawProjectilePath();
 		m_lifeTime += deltaTime;
 		m_pos.y = 0;
 		return;
@@ -153,5 +154,12 @@ namespace Core
 	bool Projectile::IsOnFloor()
 	{
 		return m_pos.y <= 0;
+	}
+	void Projectile::RegisterPosition()
+	{
+		if (m_frameCount < m_frameDuration) return;
+
+		m_trajectoryPosition.push_back(Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter));
+		m_frameCount = 0
 	}
 }

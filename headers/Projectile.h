@@ -39,6 +39,12 @@ namespace Core
 		void ImpactReaction(double deltaTime);
 		bool IsOnFloor();
 
+		void RegisterPosition();
+
+		std::vector<Vector2> m_trajectoryPosition;
+		int m_frameDuration = 6;
+		int m_frameCount;
+
 		Renderer::RendererManager* m_manager;
 	public:
 		static double lifeTimeAfterCollision;

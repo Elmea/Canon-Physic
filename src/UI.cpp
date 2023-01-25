@@ -258,7 +258,7 @@ void UI::CanonAction(Core::Canon* canon, Renderer::RendererManager& objectManage
         canon->Shoot(sizeP,weight);
     if (ImGui::Button("Reset Position", ImVec2(150, 75)))
     {
-        
+        canon->ResetPosition();
     }
 }
 
