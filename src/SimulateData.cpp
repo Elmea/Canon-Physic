@@ -10,6 +10,7 @@ namespace Data
 
 	WorldSetting::WorldSetting()
 	{
+
 	}
 
 	WorldSetting::~WorldSetting()

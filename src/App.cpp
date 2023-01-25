@@ -5,6 +5,7 @@
 
 
 double App::m_deltaTime = 0.0;
+
 App::~App()
 {
     rlImGuiShutdown();
@@ -24,67 +25,47 @@ void App::CalcDeltaTime()
     m_lastFrame = now;
 }
 
-void App::Init(int width, int height)
+
+
+void App::Init(int width , int height)
 {
 	m_height = height;
 	m_width = width;
-    CalcDeltaTime();
 
     InitWindow(m_width, m_height, "raylib [core] example - basic window");
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
-    m_interface.Init();
 
-    canon = new Core::Canon(&m_objectManager);
-    camera.target = Vector2{ (float)canon->position.x+970,(float)canon->position.y +300};
-    camera.offset = Vector2{ m_width / 2.0f, m_height / 2.0f };
-    camera.rotation = 0;
+    m_interface.Init();
+    CalcDeltaTime();
+
+    canon = new Core::Canon{ &m_objectManager };
     m_objectManager.AddObject(canon);
 }
 
 void App::Update()
 {
+    CalcDeltaTime();
+    m_objectManager.UpdateObject(m_deltaTime);
+}
 
-    // Main game loop
-    while (!WindowShouldClose())    // Detect window close button or ESC key
+void App::Draw()
+{
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+    m_objectManager.DrawObject();
+
+    m_interface.Draw(canon, m_objectManager);
+
+    EndDrawing();
+}
+
+void App::Run()
+{
+
+    while (!WindowShouldClose())   
     {
-        CalcDeltaTime();
-        m_objectManager.UpdateObject(m_deltaTime);
-        // Draw
-        //----------------------------------------------------------------------------------
-        BeginDrawing();
-        ClearBackground(RAYWHITE);
-
-       
-        /* Raylib Draws */
-        m_objectManager.DrawObject();
-
-
-        /* ========================  */
-        /* ImGui */
-        m_interface.ShowFPS();
-        m_interface.NewFrame();
-
-        m_interface.MoveCannon(canon);
-        m_interface.NewWindow("MainWindow");
-
-        m_interface.ProjectileParameters();
-        m_interface.CanonParameters(canon);
-        m_interface.WorldParameters();
-
-        m_interface.CurrentProjectileParam();
-        m_interface.CloseWindow();
-
-        m_interface.ShowValuesBeforeShoot(canon);
-        m_interface.ShowValuesAfterShoot();
-
-        m_interface.NewWindow("Game");
-        m_interface.Shoot(canon , m_objectManager);
-        m_interface.CloseWindow();
-
-
-        m_interface.EndFrame();
-        /* ========================  */
-
-        EndDrawing();
+        Update();
+        Draw();
     }
 }

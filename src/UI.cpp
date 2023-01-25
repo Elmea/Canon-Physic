@@ -36,6 +36,32 @@ UI::~UI()
 {
 }
 
+
+
+void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
+{
+    ShowFPS();
+    NewFrame();
+
+    MoveCannon(canon);
+    NewWindow("MainWindow");
+
+    ProjectileParameters();
+    CanonParameters(canon);
+    WorldParameters();
+
+    CloseWindow();
+
+    ShowValuesBeforeShoot(canon);
+    ShowValuesAfterShoot();
+
+    NewWindow("Game");
+    Shoot(canon, objectManager);
+    CloseWindow();
+
+    EndFrame();
+}
+
 void UI::NewFrame() 
 {
     rlImGuiBegin();
@@ -71,15 +97,11 @@ void UI::CanonParameters(Core::Canon* canon)
 {
     if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        if (SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon))
-            canon->valueChanged = true;
-        if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))   
-            canon->valueChanged = true;
-        if (SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon))
-            canon->valueChanged = true;
-        if (SliderDouble("Speed Drag", &speedDrag, 0.01, 100))
-            canon->valueChanged = true;
-        
+        SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
+        SliderDouble("Strength##Canon", &canon->power, 15 *(10.0/ Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter));
+        SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon);
+        SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
+        SliderDouble("Canon Lengh", &canon->canonLength, 1, 10);
         ImGui::TreePop();
     }
 }
@@ -91,8 +113,6 @@ void UI::WorldParameters()
         SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
-        SliderDouble("Size Repere", &Data::WorldSetting::pixelPerMeter, 0.0001f, 10);
-
         ImGui::TreePop();
     }
 }

@@ -14,7 +14,7 @@ namespace Core
 
 		Texture2D m_canonTex;
 		Texture2D m_cannonBaseTex;
-		Renderer::RendererManager* m_renderManager;
+		Renderer::RendererManager* m_renderManager = nullptr;
 
 		Float2 posImpact;
 		Float2 speedZero;

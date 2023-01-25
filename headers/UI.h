@@ -58,6 +58,7 @@ public :
 	void Init();
 	~UI();
 
+	void Draw(Core::Canon* canon, Renderer::RendererManager& objectManager);
 	/* Context */
 	void NewFrame();
 	void EndFrame();
