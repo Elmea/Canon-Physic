@@ -110,7 +110,7 @@ void UI::WorldParameters()
 {
     if (ImGui::TreeNodeEx("World config",ImGuiTreeNodeFlags_DefaultOpen ))
     {
-        SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
+        SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, -50);
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         ImGui::TreePop();
