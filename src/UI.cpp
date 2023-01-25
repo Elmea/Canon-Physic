@@ -2,10 +2,12 @@
 #include "Canon.h"
 #include <iostream>
 #include "App.h"
+#include "Projectile.h"
 
 double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
+std::map<int, ProjectileParameters> UI::projectileParameters = {};
 
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
@@ -47,7 +49,7 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
     ProjectileParameters();
     CanonParameters(canon);
     WorldParameters();
-
+    CurrentProjectileParam();
     CloseWindow();
 
     ShowValuesBeforeShoot(canon);
@@ -82,20 +84,12 @@ void UI::CloseWindow()
 
 void UI::ProjectileParameters()
 {
-
     if (ImGui::TreeNodeEx("Projectile parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        if (SliderDouble("Weight##Projectile", &weight, 0.0001, 1000))
-        {
-
-        }
-
-        if (SliderDouble("Size##Projectile", &sizeP, 4, 50))
-        {
-
-        }
+        SliderDouble("Weight##Projectile", &weight, 0.0001, 1000);
+        SliderDouble("Size##Projectile", &sizeP, 4, 50);
+        SliderDouble("Life Time##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
         ImGui::TreePop();
-
     }
 }
 
@@ -120,6 +114,29 @@ void UI::WorldParameters()
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0.0001, 10);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         ImGui::TreePop();
+    }
+}
+
+void UI::CurrentProjectileParam()
+{
+    int i = 0;
+    for (auto itr = projectileParameters.begin(); itr != projectileParameters.end() && i < 5; ++itr, i++)
+    {
+        ImGui::Text(TextFormat("Projectile n %d", itr->first));
+        ImGui::Text(TextFormat("Velocity   : %2.f , %2.f", projectileParameters[itr->first].velocity.x, projectileParameters[itr->first].velocity.y));
+        ImGui::Text(TextFormat("Position   : %2.f , %2.f", projectileParameters[itr->first].position.x, projectileParameters[itr->first].position.y));
+        ImGui::Text(TextFormat("Current life time : %2.f", projectileParameters[itr->first].currentLifeTime));
+        ImGui::Checkbox("Should projectile die", &projectileParameters[itr->first].shouldDie);
+
+        ImGui::Checkbox("Control pos manually", &projectileParameters[itr->first].controlPos);
+        if (projectileParameters[itr->first].controlPos)
+        {
+            SliderDouble("Lock position X", &projectileParameters[itr->first].position.x, 0 , 1920/Data::WorldSetting::pixelPerMeter);
+            SliderDouble("Lock position Y", &projectileParameters[itr->first].position.y, 0.1, 1080 / Data::WorldSetting::pixelPerMeter);
+        }
+
+        ImGui::NewLine();
+        ImGui::NewLine();
     }
 }
 

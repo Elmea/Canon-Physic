@@ -35,8 +35,9 @@ namespace Core
 
 	void Canon::Shoot(double radius, double weight)
 	{
-		Projectile* pProjectile = new Projectile(position, radius, weight, power, angle, m_renderManager);
+		Projectile* pProjectile = new Projectile(position, radius, weight, power, angle, m_renderManager, m_nbProjectileCreated);
 		m_renderManager->AddObject(pProjectile);
+		m_nbProjectileCreated++;
 	}
 
 	void Canon::Update(double deltaTime)

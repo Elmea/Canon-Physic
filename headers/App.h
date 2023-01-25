@@ -17,7 +17,6 @@ private :
 	Renderer::RendererManager m_objectManager;
 
 	UI m_interface;
-	WorldParam worldSettings;
 	Core::Canon* canon;
 
 	std::chrono::time_point<std::chrono::high_resolution_clock> m_lastFrame;

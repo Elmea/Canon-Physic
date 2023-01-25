@@ -9,6 +9,7 @@ namespace Core
 
 
 	private:
+		int m_nbProjectileCreated = 0;
 		bool m_activeShootPrediction;
 
 		Texture2D m_canonTex;
