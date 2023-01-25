@@ -189,7 +189,10 @@ void UI::WorldParameters(Core::Canon* canon)
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 100);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         if (ImGui::Combo("Precalculted values", &usedOption, preCalcultedOption, WORLD_OPTION_NB))
+        {
             LoadWorldOption();
+            canon->valueChanged = true;
+        }
 
         ImGui::TreePop();
     }
