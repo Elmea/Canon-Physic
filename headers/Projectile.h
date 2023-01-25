@@ -5,6 +5,8 @@
 
 namespace Core
 {
+	static int nbProjectileCreated = 0;
+
 	class Projectile : public Renderer::RenderObject
 	{
 	private:
@@ -41,7 +43,7 @@ namespace Core
 	public:
 		static double lifeTimeAfterCollision;
 
-		Projectile(Float2 position, double radius, double weight, const Float2& speedZero , Renderer::RendererManager* _manager , int _id);
+		Projectile(Float2 position, double radius, double weight, const Float2& speedZero , Renderer::RendererManager* _manager );
 		~Projectile();
 
 		double& GetWeightRef() { return m_weight; }

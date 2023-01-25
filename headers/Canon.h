@@ -13,7 +13,6 @@ namespace Core
 
 
 	private:
-		int m_nbProjectileCreated = 0;
 		bool m_activeShootPrediction;
 
 		Texture2D m_canonTex;
@@ -23,8 +22,8 @@ namespace Core
 		Float2 posImpact;
 		Float2 speedZero;
 		Float2 speedImpact;
-		Float2 initPos;
 	public:
+		Float2 initPos;
 		Float2 size;
 		Float2 position = Float2{ 200,100 };
 		double angle = 0;
