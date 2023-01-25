@@ -40,6 +40,7 @@ namespace Core
 
 		size.x  = m_canonTex.width;
 		size.y  = m_canonTex.height;
+		rigidbody.SetStartPos(position);
 		initPos = position;
 
 	}
@@ -48,17 +49,25 @@ namespace Core
 	{
 	}
 
-	void Canon::ResolveCollision(double p_weight)
+	Float2 Canon::ResolveCollision(double p_weight)
 	{
 		Float2 speedCanon =( (speedZero * p_weight) / weight ) * -1;
 		speedCanon.y = 0;
 		rigidbody.AddForce(speedCanon, ForceType::FT_SPEED);
+
+		float weight = Data::WorldSetting::GRAVITY * p_weight;
+		double RadAngle = DEG2RAD * angle;
+		
+		double deccelerationFriction = -5;
+		double coefFriction = sqrt(2.f * deccelerationFriction * canonLength + (speedZero.Magnitude() * speedZero.Magnitude()));
+		return {coefFriction * cos(RadAngle) , coefFriction * sin(-RadAngle)};
 	}
 
 	void Canon::ShowPredictionShoot()
 	{
 		if (valueChanged)
 		{
+			timeInCanon = canonLength / speedZero.Magnitude();
 			valueChanged = false;
 			/* Setup values */
 			double RadAngle = DEG2RAD * angle;
@@ -96,8 +105,8 @@ namespace Core
 	void Canon::Shoot(double radius, double weight)
 	{
 		rigidbody.SetStartPos(position);
-		ResolveCollision(weight);
-		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager);
+		Float2 frictionCoef = ResolveCollision(weight);
+		Projectile* pProjectile = new Projectile(position, radius, weight, frictionCoef, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
 	}
 

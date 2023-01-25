@@ -26,6 +26,7 @@ namespace Core
 		Float2 initPos;
 		Float2 size;
 		Float2 position = Float2{ 200,100 };
+		double timeInCanon;
 		double angle = 0;
 		double canonLength = 1;
 		double power = 10;
@@ -41,7 +42,8 @@ namespace Core
 		void ResolveFriction();
 		Rigidbody rigidbody;
 
-		void ResolveCollision(double p_weight);
+		/* Return the friction coefficient */
+		Float2 ResolveCollision(double p_weight);
 	public:
 		Canon(Renderer::RendererManager* manager);
 		Canon();
