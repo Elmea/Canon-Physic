@@ -55,7 +55,6 @@ namespace Core
 
 			rigidbody.Update(deltaTime, m_lifeTime);
 
-			//m_pos = ( Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0 )* (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime ) + m_startPos / Data::WorldSetting::pixelPerMeter;
 			m_pos = rigidbody.GetPos();
 		}
 		else
@@ -91,16 +90,16 @@ namespace Core
 		if (Data::WorldSetting::airResistance == 0 || v == 0)
 			return { 0,0 };
 
-		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v);
+		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v) / Data::WorldSetting::pixelPerMeter;
 
 		double theta = atan2(m_velocity.y, m_velocity.x);
 
-		return Float2{ -(magnitude - m_weight) * cos(theta), -(magnitude - m_weight) * sin(theta) } / Data::WorldSetting::pixelPerMeter;
+		return Float2{ -(magnitude) * cos(theta), -(magnitude) * sin(theta) } ;
 	}
 
 	double Projectile::CalcTrailCoefficient()
 	{
-		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity * 10);
+		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity * 10) / m_weight);
 	}
 
 	void Projectile::DrawProjectilePath()

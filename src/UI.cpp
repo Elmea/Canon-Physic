@@ -59,7 +59,7 @@ void UI::ProjectileParameters()
 {
     if (ImGui::TreeNodeEx("Projectile parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        SliderDouble("Weight##Projectile", &weight, 0.0001, 1000);
+        SliderDouble("Weight##Projectile", &weight, 0.1, 1000);
         SliderDouble("Size##Projectile", &sizeP, 4, 50);
         SliderDouble("Life Time##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
         ImGui::TreePop();
