@@ -39,7 +39,7 @@ public:
     Float2 operator/(const double& divider)const ;
     operator Vector2()const;
 
-    bool operator==(Float2& other) { return (x == other.x) && (y == other.y); }
+    bool operator==(const Float2& other) { return (x == other.x) && (y == other.y); }
 
     double Magnitude();
 

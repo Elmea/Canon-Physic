@@ -71,6 +71,7 @@ void App::Update()
         m_interface.CanonParameters(canon);
         m_interface.WorldParameters();
 
+        m_interface.CurrentProjectileParam();
         m_interface.CloseWindow();
 
         m_interface.ShowValuesBeforeShoot(canon);
@@ -79,6 +80,7 @@ void App::Update()
         m_interface.NewWindow("Game");
         m_interface.Shoot(canon , m_objectManager);
         m_interface.CloseWindow();
+
 
         m_interface.EndFrame();
         /* ========================  */

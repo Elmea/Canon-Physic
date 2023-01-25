@@ -8,6 +8,8 @@ namespace Core
 	class Projectile : public Renderer::RenderObject
 	{
 	private:
+		int m_id;
+
 		Float2 m_pos{ 0, 0};
 		double m_weight;
 		double m_radius;
@@ -17,10 +19,10 @@ namespace Core
 		/* Values for drawing curve */
 		Float2 m_startPos;
 		Float2 m_endPos;
-		bool hasHitGround = false;
+		bool m_hasHitGround = false;
 		Float2 m_vInit;
 		Float2 m_vFinal;
-		double maxHeight;
+		double m_maxHeight;
 
 		const double m_frontSurface;
 
@@ -30,10 +32,13 @@ namespace Core
 		Float2 CalcTrail();
 		double CalcTrailCoefficient();
 		void DrawProjectilePath();
+		void TouchGround(double deltaTime);
 
 		Renderer::RendererManager* m_manager;
 	public:
-		Projectile(Float2 position, double radius, double weight, double power, double angle , Renderer::RendererManager* _manager);
+		static double lifeTimeAfterCollision;
+
+		Projectile(Float2 position, double radius, double weight, double power, double angle , Renderer::RendererManager* _manager , int _id);
 		~Projectile();
 
 		double& GetWeightRef() { return m_weight; }
