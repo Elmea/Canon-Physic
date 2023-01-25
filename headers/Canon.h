@@ -48,6 +48,7 @@ namespace Core
 		~Canon();
 
 		void ActivateShootPrediction(bool state) { m_activeShootPrediction = state; };
+		Float2 GetInitPos() { return initPos; }
 
 		void Shoot(double radius, double weight);
 		void Update(double deltaTime);

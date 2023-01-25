@@ -46,9 +46,6 @@ private :
 	bool ClickInRectangle(Float2 mousePos, Rectangle rec);
 
 	/* Background values */
-	void DrawBackGround();
-	float minTimeBetweenSpawn = 0;
-	float currentTime;
 	std::vector<Clouds> clouds;
 	Texture2D background;
 
@@ -73,6 +70,7 @@ public :
 	void Init();
 	~UI();
 
+	void DrawBackGround();
 	void Draw(Core::Canon* canon, Renderer::RendererManager& objectManager);
 	/* Context */
 	void NewFrame();

@@ -70,11 +70,11 @@ namespace Core
 		if (Data::WorldSetting::airResistance == 0 || v == 0)
 			return { 0,0 };
 
-		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v)/ 100;
+		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v) / Data::WorldSetting::pixelPerMeter;
 
 		double theta = atan2(m_velocity.y, m_velocity.x);
 
-		return { -(magnitude - (m_weight/1000.0)) * cos(theta), -(magnitude - (m_weight / 1000.0)) * sin(theta) };
+		return Float2{ -(magnitude / m_weight) * cos(theta), -(magnitude / m_weight) * sin(theta) } ;
 	}
 
 	/// <summary>
@@ -86,7 +86,7 @@ namespace Core
 	/// <returns></returns>
 	double Projectile::CalcTrailCoefficient()
 	{
-		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity) / m_weight);
+		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity));
 	}
 
 	void Projectile::DrawProjectilePath()

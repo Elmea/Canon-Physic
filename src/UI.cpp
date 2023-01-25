@@ -46,21 +46,15 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 void UI::DrawBackGround()
 {
     if (clouds.size() < 15)
-    {
-        currentTime += App::m_deltaTime;
-        if (currentTime > minTimeBetweenSpawn)
-        {
-            clouds.push_back(Clouds{ RandomFloat(0.15 , 0.4), Float2 {1920 , RandomFloat(0,300)}, RandomFloat(0.05f , 0.2f)  , (int)RandomFloat(75,255) });
-            currentTime = 0.f;
-            minTimeBetweenSpawn = RandomFloat(8.f, 20.f);
-        }
+    { 
+        clouds.push_back(Clouds{ RandomFloat(0.35 , 0.65), Float2 {RandomFloat(0,1920) , RandomFloat(0,300)}, RandomFloat(0.05f , 0.2f)  , (int)RandomFloat(75,255) });
     }
 
     for (Clouds& cl : clouds)
     {
         cl.pos.x -= cl.speed;
         if (cl.pos.x <= -(background.width * cl.scale))
-            cl.pos.x = 1920;
+            cl.pos.x = 1900;
 
         Color color = { 255,255,255, cl.opacity };
         DrawTextureEx(background, cl.pos, 0.0f, cl.scale, color);
@@ -79,7 +73,7 @@ UI::~UI()
 
 void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
-    DrawBackGround();
+    
     ShowFPS();
     NewFrame();
 
@@ -87,9 +81,12 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
     NewWindow("MainWindow");
 
     ProjectileParameters();
+    ImGui::Spacing();
     CanonParameters(canon);
-    CurrentProjectileParam();
+    ImGui::Spacing();
     WorldParameters(canon);
+    ImGui::Spacing();
+    CurrentProjectileParam();
 
     CloseWindow();
 
@@ -171,6 +168,10 @@ void UI::CanonParameters(Core::Canon* canon)
        
          
        
+
+        ImGui::Text("Canon x delta : %f", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
+        ImGui::Text("Canon x velocity : %f", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
+
         ImGui::TreePop();
     }
 }
