@@ -23,7 +23,7 @@ namespace Core
 		Float2 posImpact;
 		Float2 speedZero;
 		Float2 speedImpact;
-
+		Float2 initPos;
 	public:
 		Float2 size;
 		Float2 position = Float2{ 200,100 };
@@ -39,6 +39,7 @@ namespace Core
 	private:
 		void ShowPredictionShoot();
 		void DrawCurvePrediction();
+		void ResolveFriction();
 		Rigidbody rigidbody;
 
 		void ResolveCollision(double p_weight);

@@ -14,7 +14,22 @@ namespace Core
 		size.x = m_canonTex.width;
 		size.y = m_canonTex.height;
 		rigidbody.SetStartPos(position);
+		initPos = position;
 
+	}
+
+	void Canon::ResolveFriction()
+	{
+		if (rigidbody.GetVelocity().x < 0)
+		{
+			rigidbody.AddForce(Float2{ 0.03, 0 }, ForceType::FT_SPEED);
+		}
+		else
+		{
+			rigidbody.StopVelocity();
+			rigidbody.ClearForces();
+			position = initPos;
+		}
 	}
 
 	Canon::Canon()
@@ -25,6 +40,8 @@ namespace Core
 
 		size.x  = m_canonTex.width;
 		size.y  = m_canonTex.height;
+		initPos = position;
+
 	}
 
 	Canon::~Canon()
@@ -88,8 +105,9 @@ namespace Core
 	void Canon::Update(double deltaTime)
 	{
 		ShowPredictionShoot();
-		rigidbody.Update(deltaTime , 1);
+		rigidbody.Update(deltaTime, 1);
 		position = rigidbody.GetPos();
+		ResolveFriction();
 	}
 
 	void Canon::Draw()
