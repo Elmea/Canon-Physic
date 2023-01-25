@@ -40,7 +40,7 @@ public:
     operator Vector2()const;
 
     bool operator==(const Float2& other) { return (x == other.x) && (y == other.y); }
-
+    bool operator!=(const Float2& other) { return !(*this == other); }
     double Magnitude();
 
     void Normalize();

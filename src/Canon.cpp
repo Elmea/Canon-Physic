@@ -23,13 +23,24 @@ namespace Core
 		if (rigidbody.GetVelocity().x < 0)
 		{
 			rigidbody.AddForce(Float2{ 0.03, 0 }, ForceType::FT_SPEED);
+			valueChanged = true;
 		}
 		else
 		{
-			rigidbody.StopVelocity();
-			rigidbody.ClearForces();
-			position = initPos;
+			ResetPosition();
 		}
+	}
+
+	void Canon::ResetPosition()
+	{
+		rigidbody.StopVelocity();
+		rigidbody.ClearForces();
+		if (position != initPos)
+		{
+			position = initPos;
+			valueChanged = true;
+		}
+		
 	}
 
 	Canon::Canon()
