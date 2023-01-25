@@ -100,7 +100,7 @@ void UI::CanonParameters(Core::Canon* canon)
         SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
         SliderDouble("Strength##Canon", &canon->power, 15 *(10.0/ Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter));
         SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon);
-        SliderDouble("Speed Drag", &speedDrag, 0.01, 100);
+        SliderDouble("Speed Drag", &speedDrag, 0.01, 10);
         SliderDouble("Canon Lengh", &canon->canonLength, 1, 10);
         ImGui::TreePop();
     }
@@ -110,7 +110,7 @@ void UI::WorldParameters()
 {
     if (ImGui::TreeNodeEx("World config",ImGuiTreeNodeFlags_DefaultOpen ))
     {
-        SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, 0, -50);
+        SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -0.01, -50);
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         ImGui::TreePop();
@@ -135,6 +135,7 @@ void UI::CurrentProjectileParam()
             SliderDouble("Lock position Y", &projectileParameters[itr->first].position.y, 0.1, 1080 / Data::WorldSetting::pixelPerMeter);
         }
 
+
         ImGui::NewLine();
         ImGui::NewLine();
     }
@@ -142,7 +143,7 @@ void UI::CurrentProjectileParam()
 
 void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
-    if (ImGui::Button("Shoot", ImVec2(150,75)))
+    if (ImGui::Button("Shoot", ImVec2(150,75)) || ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Space))
         canon->Shoot(sizeP,weight);
 }
 
