@@ -48,7 +48,9 @@ namespace Core
 	void Projectile::Draw()
 	{
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
-		DrawCircle(raylibPos.x, raylibPos.y, m_radius, PURPLE);
+		DrawCircle(raylibPos.x, raylibPos.y, m_radius, YELLOW);
+		if(m_hasHitGround)DrawProjectilePath();
+		
 	}
 
 	void Projectile::AddForce(Float2 force, Core::ForceType type)
@@ -82,7 +84,7 @@ namespace Core
 		Float2 raylibSEnd = Data::WorldSetting::GetRaylibSpeed(m_vFinal);
 
 		Float2 controlPoint = Float2::LineIntersection(raylibSPos, raylibSZero, raylibEPos, raylibSEnd);
-		DrawLineBezierQuad(raylibSPos, raylibEPos, controlPoint, 2, SKYBLUE);
+		DrawLineBezierQuad(raylibSPos, raylibEPos, controlPoint, 2, ORANGE);
 	}
 
 	void Projectile::TouchGround(double deltaTime)
@@ -95,6 +97,8 @@ namespace Core
 		UI::length = m_endPos.x - (m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
 		UI::height = m_maxHeight;
 		UI::timeAir = m_inAirTime;
+
+		
 	}
 	void Projectile::Move(double deltaTime)
 	{
