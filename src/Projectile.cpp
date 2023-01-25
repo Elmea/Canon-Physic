@@ -33,8 +33,6 @@ namespace Core
 			ImpactReaction(deltaTime);
 			return;
 		}
-
-		
 		
 		Move(deltaTime);
 
