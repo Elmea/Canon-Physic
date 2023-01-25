@@ -34,7 +34,7 @@ namespace Core
 	void Canon::ResolveCollision(double p_weight)
 	{
 		Float2 speedCanon =( (speedZero * p_weight) / weight ) * -1;
-
+		speedCanon.y = 0;
 		rigidbody.AddForce(speedCanon, ForceType::FT_SPEED);
 	}
 

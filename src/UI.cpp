@@ -35,6 +35,32 @@ UI::~UI()
 {
 }
 
+
+
+void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
+{
+    ShowFPS();
+    NewFrame();
+
+    MoveCannon(canon);
+    NewWindow("MainWindow");
+
+    ProjectileParameters();
+    CanonParameters(canon);
+    WorldParameters();
+    CurrentProjectileParam();
+
+    CloseWindow();
+
+    ShowValuesBeforeShoot(canon);
+    ShowValuesAfterShoot();
+    NewWindow("Game");
+    Shoot(canon, objectManager);
+    CloseWindow();
+
+    EndFrame();
+}
+
 void UI::NewFrame() 
 {
     rlImGuiBegin();
@@ -96,7 +122,10 @@ void UI::CanonParameters(Core::Canon* canon)
 
             canon->valueChanged = true;
         }
-        
+        if (SliderDouble("Canon Lengh", &canon->canonLength, 1, 10))
+        {
+            canon->valueChanged = true;
+        }
         ImGui::TreePop();
     }
 }
@@ -108,8 +137,6 @@ void UI::WorldParameters()
         SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
-        SliderDouble("Size Repere", &Data::WorldSetting::pixelPerMeter, 0.0001f, 10);
-
         ImGui::TreePop();
     }
 }

@@ -19,16 +19,17 @@ private :
 	UI m_interface;
 	Core::Canon* canon;
 
-	Camera2D camera = { 0 };
-
 	std::chrono::time_point<std::chrono::high_resolution_clock> m_lastFrame;
 	void CalcDeltaTime();
+
+	void Update();
+	void Draw();
 
 public :
 	~App();
 	static double m_deltaTime ;
 
-	void Init(int width, int height);
-	void Update();
+	void Init(int width =  1920, int height = 1080);
+	void Run();
 	double DeltaTime();
 };
