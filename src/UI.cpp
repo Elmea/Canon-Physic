@@ -96,7 +96,7 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
     ShowValuesBeforeShoot(canon);
     ShowValuesAfterShoot();
     NewWindow("Game");
-    Shoot(canon, objectManager);
+    CanonAction(canon, objectManager);
     CloseWindow();
 
     EndFrame();
@@ -167,6 +167,10 @@ void UI::CanonParameters(Core::Canon* canon)
         {
             canon->valueChanged = true;
         }
+        ImGui::Checkbox("Canon Collision", &canon->isCollisionActive);
+       
+         
+       
         ImGui::TreePop();
     }
 }
@@ -247,10 +251,14 @@ void UI::CurrentProjectileParam()
     }
 }
 
-void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
+void UI::CanonAction(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
     if (ImGui::Button("Shoot", ImVec2(150,75)) || ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Space))
         canon->Shoot(sizeP,weight);
+    if (ImGui::Button("Reset Position", ImVec2(150, 75)))
+    {
+        
+    }
 }
 
 void UI::ShowValuesBeforeShoot(Core::Canon* canon)

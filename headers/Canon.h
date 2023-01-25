@@ -29,11 +29,11 @@ namespace Core
 		double angle = 0;
 		double canonLength = 1;
 		double power = 10;
-		double timeInAir; 
+		double timeInAir;
 		double maxW;
 		double maxH;
 		double weight = 100;
-
+		bool isCollisionActive;
 		bool valueChanged = true;
 	private:
 		void ShowPredictionShoot();

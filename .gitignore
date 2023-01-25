@@ -30,5 +30,6 @@ x64/
 *.pidb
 *.svclog
 *.scc
+*.ini
 Debug/
 OpenGL/Log.txt
