@@ -51,7 +51,7 @@ void App::Update()
 void App::Draw()
 {
     BeginDrawing();
-    ClearBackground(RAYWHITE);
+    ClearBackground(SKYBLUE);
 
     m_objectManager.DrawObject();
 

@@ -1,9 +1,13 @@
 #pragma once
 #include "Maths.h"
 #include "RenderManager.h"
+#include "Rigidbody.h"
 #include "raylib.h"
+
 namespace Core
 {
+	class Projectile;
+
 	class Canon : public Renderer::RenderObject
 	{
 
@@ -19,7 +23,7 @@ namespace Core
 		Float2 posImpact;
 		Float2 speedZero;
 		Float2 speedImpact;
-
+		Float2 initPos;
 	public:
 		Float2 size;
 		Float2 position = Float2{ 200,100 };
@@ -29,23 +33,29 @@ namespace Core
 		double timeInAir; 
 		double maxW;
 		double maxH;
+		double weight = 100;
 
 		bool valueChanged = true;
 	private:
 		void ShowPredictionShoot();
 		void DrawCurvePrediction();
+		void ResolveFriction();
+		Rigidbody rigidbody;
 
+		void ResolveCollision(double p_weight);
 	public:
 		Canon(Renderer::RendererManager* manager);
 		Canon();
 		~Canon();
 
 		void ActivateShootPrediction(bool state) { m_activeShootPrediction = state; };
+		Float2 GetInitPos() { return initPos; }
 
 		void Shoot(double radius, double weight);
 		void Update(double deltaTime);
 		void Draw();
 
+		Rigidbody& GetRigidbody() { return rigidbody; }
 
 
 

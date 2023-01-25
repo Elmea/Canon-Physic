@@ -21,7 +21,7 @@ namespace Core
 		std::vector<Float2> m_AccelerationForces;
 
 	public:
-
+		void StopVelocity() { m_velocity = Float2{ 0,0 }; }
 		void Update(double deltaTime);
 		void DrawForces();
 		void ClearForces();

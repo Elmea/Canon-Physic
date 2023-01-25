@@ -13,7 +13,25 @@ namespace Core
 		
 		size.x = m_canonTex.width;
 		size.y = m_canonTex.height;
+		rigidbody.SetStartPos(position);
+		initPos = position;
+
 	}
+
+	void Canon::ResolveFriction()
+	{
+		if (rigidbody.GetVelocity().x < 0)
+		{
+			rigidbody.AddForce(Float2{ 0.03, 0 }, ForceType::FT_SPEED);
+		}
+		else
+		{
+			rigidbody.StopVelocity();
+			rigidbody.ClearForces();
+			position = initPos;
+		}
+	}
+
 	Canon::Canon()
 	{
 		m_activeShootPrediction = true;
@@ -22,10 +40,19 @@ namespace Core
 
 		size.x  = m_canonTex.width;
 		size.y  = m_canonTex.height;
+		initPos = position;
+
 	}
 
 	Canon::~Canon()
 	{
+	}
+
+	void Canon::ResolveCollision(double p_weight)
+	{
+		Float2 speedCanon =( (speedZero * p_weight) / weight ) * -1;
+		speedCanon.y = 0;
+		rigidbody.AddForce(speedCanon, ForceType::FT_SPEED);
 	}
 
 	void Canon::ShowPredictionShoot()
@@ -68,7 +95,9 @@ namespace Core
 
 	void Canon::Shoot(double radius, double weight)
 	{
-		Projectile* pProjectile = new Projectile(position, radius, weight, power, angle, m_renderManager, m_nbProjectileCreated);
+		rigidbody.SetStartPos(position);
+		ResolveCollision(weight);
+		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager, m_nbProjectileCreated);
 		m_renderManager->AddObject(pProjectile);
 		m_nbProjectileCreated++;
 	}
@@ -76,6 +105,9 @@ namespace Core
 	void Canon::Update(double deltaTime)
 	{
 		ShowPredictionShoot();
+		rigidbody.Update(deltaTime);
+		position = rigidbody.GetPos();
+		ResolveFriction();
 	}
 
 	void Canon::Draw()

@@ -9,15 +9,14 @@ namespace Core
 {
 	double Projectile::lifeTimeAfterCollision = 2.5f;
 
-	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
+	Projectile::Projectile(Float2 position, double radius, double weight, const Float2& projSpeedZero, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
 		m_frontSurface(PI* ((radius* radius) / 16.0)), m_manager(_manager), m_id(_id)
 	{
 		m_startPos = position;
 		rigidbody.SetStartPos(position / Data::WorldSetting::pixelPerMeter);
 		m_pos = position / Data::WorldSetting::pixelPerMeter;
 		m_maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
-		angle = DEG2RAD * angle;
-		m_vInit = Float2{ power * cos(angle), power * sin(-angle) };
+		m_vInit = projSpeedZero;
 		AddForce(m_vInit, Core::ForceType::FT_SPEED);
 	}
 
@@ -29,40 +28,14 @@ namespace Core
 	{
 		UI::projectileParameters[m_id].currentLifeTime = m_lifeTime - m_inAirTime;
 
-		if (m_pos.y <= 0)
+		if (IsOnFloor())
 		{
-			if (!m_hasHitGround)
-				TouchGround(deltaTime);
-			
-			if (UI::projectileParameters[m_id].shouldDie && m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
-			{
-				UI::projectileParameters.erase(m_id);
-				m_manager->ShouldRemove(this);
-				return;
-			}
-
-			m_lifeTime += deltaTime;
-			m_pos.y = 0;
-			DrawProjectilePath();
+			ImpactReaction(deltaTime);
 			return;
 		}
 		
-		if (!UI::projectileParameters[m_id].controlPos)
-		{
-			m_velocity = rigidbody.GetVelocity();
+		Move(deltaTime);
 
-			rigidbody.AddForce(CalcTrail(), Core::ForceType::FT_SPEED);
-			rigidbody.AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, Core::ForceType::FT_ACCELERATION);
-
-			rigidbody.Update(deltaTime);
-
-			m_pos = rigidbody.GetPos();
-		}
-		else
-		{
-			m_pos = UI::projectileParameters[m_id].position;
-		}
-		
 		if (m_pos.y >= m_maxHeight)
 			m_maxHeight = m_pos.y;
 
@@ -75,9 +48,9 @@ namespace Core
 	void Projectile::Draw()
 	{
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
-		DrawCircle(raylibPos.x, raylibPos.y, m_radius, PURPLE);
-		rigidbody.DrawForces();
-		rigidbody.ClearForces();
+		DrawCircle(raylibPos.x, raylibPos.y, m_radius, YELLOW);
+		if(m_hasHitGround)DrawProjectilePath();
+		
 	}
 
 	void Projectile::AddForce(Float2 force, Core::ForceType type)
@@ -116,13 +89,13 @@ namespace Core
 
 	void Projectile::DrawProjectilePath()
 	{
-		Float2 raylibSPos = Data::WorldSetting::GetRaylibPos(m_startPos );
-		Float2 raylibEPos = Data::WorldSetting::GetRaylibPos(m_endPos   * Data::WorldSetting::pixelPerMeter);
+		Float2 raylibSPos = Data::WorldSetting::GetRaylibPos(m_startPos);
+		Float2 raylibEPos = Data::WorldSetting::GetRaylibPos(m_endPos * Data::WorldSetting::pixelPerMeter);
 		Float2 raylibSZero = Data::WorldSetting::GetRaylibSpeed(m_vInit);
 		Float2 raylibSEnd = Data::WorldSetting::GetRaylibSpeed(m_vFinal);
 
 		Float2 controlPoint = Float2::LineIntersection(raylibSPos, raylibSZero, raylibEPos, raylibSEnd);
-		DrawLineBezierQuad(raylibSPos, raylibEPos, controlPoint, 2, SKYBLUE);
+		DrawLineBezierQuad(raylibSPos, raylibEPos, controlPoint, 2, ORANGE);
 	}
 
 	void Projectile::TouchGround(double deltaTime)
@@ -135,5 +108,46 @@ namespace Core
 		UI::length = m_endPos.x - (m_startPos.x / Data::WorldSetting::pixelPerMeter) - m_vInit.x * deltaTime;
 		UI::height = m_maxHeight;
 		UI::timeAir = m_inAirTime;
+
+		
+	}
+	void Projectile::Move(double deltaTime)
+	{
+	
+		if (!UI::projectileParameters[m_id].controlPos)
+		{
+			m_velocity = rigidbody.GetVelocity();
+
+			rigidbody.AddForce(CalcTrail(), Core::ForceType::FT_SPEED);
+			rigidbody.AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, Core::ForceType::FT_ACCELERATION);
+
+			rigidbody.Update(deltaTime);
+
+			m_pos = rigidbody.GetPos();
+		}
+		else
+		{
+			m_pos = UI::projectileParameters[m_id].position;
+		}
+	}
+	void Projectile::ImpactReaction(double deltaTime)
+	{
+		if (!m_hasHitGround)
+			TouchGround(deltaTime);
+
+		if (UI::projectileParameters[m_id].shouldDie && m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
+		{
+			UI::projectileParameters.erase(m_id);
+			m_manager->ShouldRemove(this);
+			return;
+		}
+
+		m_lifeTime += deltaTime;
+		m_pos.y = 0;
+		return;
+	}
+	bool Projectile::IsOnFloor()
+	{
+		return m_pos.y <= 0;
 	}
 }

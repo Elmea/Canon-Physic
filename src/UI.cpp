@@ -40,7 +40,6 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 void UI::Init()
 {
     
-
     rlImGuiSetup(true);
 }
 
@@ -58,13 +57,13 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 
     ProjectileParameters();
     CanonParameters(canon);
+    CurrentProjectileParam();
     WorldParameters(canon);
 
     CloseWindow();
 
     ShowValuesBeforeShoot(canon);
     ShowValuesAfterShoot();
-
     NewWindow("Game");
     Shoot(canon, objectManager);
     CloseWindow();
@@ -107,15 +106,40 @@ void UI::CanonParameters(Core::Canon* canon)
 {
     if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
+        Core::Rigidbody& canonRbody = canon->GetRigidbody();
+        if (SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon))
+        {
+            canonRbody.SetStartPos(canon->position);
+            canon->valueChanged = true;
+        }
         if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
+        {
+
+            canon->valueChanged = true;
+        }
+        if (SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon))
+        {
+            canon->valueChanged = true;
+
+        }
+        if (SliderDouble("Weight", &canon->weight, 1, 1000))
+        {
+            canon->valueChanged = true;
+
+        }
+        if (SliderDouble("Speed Drag", &speedDrag, 0.01, 100))
+        {
+
+            canon->valueChanged = true;
+        }
+        if (SliderDouble("Canon Lengh", &canon->canonLength, 1, 10))
         {
             canon->valueChanged = true;
         }
 
-        SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon);
-        SliderDouble("Speed Drag", &speedDrag, 0.01, 10);
-        SliderDouble("Canon Lengh", &canon->canonLength, 1, 10);
+        ImGui::Text("Canon x delta : %f", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
+        ImGui::Text("Canon x velocity : %f", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
+
         ImGui::TreePop();
     }
 }
@@ -129,7 +153,7 @@ void UI::WorldParameters(Core::Canon* canon)
             canon->valueChanged = true;
         }
 
-        SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
+        SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 100);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         if (ImGui::Combo("Precalculted values", &usedOption, preCalcultedOption, WORLD_OPTION_NB))
             LoadWorldOption();
@@ -217,6 +241,7 @@ void UI::ShowValuesBeforeShoot(Core::Canon* canon)
 void UI::MoveCannon(Core::Canon* canon)
 {
     Float2 mousePos = {GetMouseX(),  GetMouseY()};
+    Core::Rigidbody& canonRbody = canon->GetRigidbody();
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
     {
@@ -233,6 +258,7 @@ void UI::MoveCannon(Core::Canon* canon)
                 if (canon->position.y > maxHeightCanon)
                     canon->position.y = maxHeightCanon;
 
+                canonRbody.SetStartPos(canon->position);
                 canon->valueChanged = true;
             }
         }

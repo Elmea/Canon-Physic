@@ -33,16 +33,20 @@ namespace Core
 		double CalcTrailCoefficient();
 		void DrawProjectilePath();
 		void TouchGround(double deltaTime);
+		void Move(double deltaTime);
+		void ImpactReaction(double deltaTime);
+		bool IsOnFloor();
 
 		Renderer::RendererManager* m_manager;
 	public:
 		static double lifeTimeAfterCollision;
 
-		Projectile(Float2 position, double radius, double weight, double power, double angle , Renderer::RendererManager* _manager , int _id);
+		Projectile(Float2 position, double radius, double weight, const Float2& speedZero , Renderer::RendererManager* _manager , int _id);
 		~Projectile();
 
 		double& GetWeightRef() { return m_weight; }
 		double& GetRadiusRef() { return m_radius; }
+		Rigidbody& GetRigidbody() { return rigidbody; }
 
 		void Update(double deltaTime);
 		void Draw();
