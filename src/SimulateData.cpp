@@ -3,7 +3,7 @@
 namespace Data
 {
 	 double WorldSetting::airResistance = 0.1;
-	 double WorldSetting::airViscosity = 15.6;
+	 double WorldSetting::airViscosity = 1.56;
 	 double WorldSetting::GRAVITY = -9.80665f;
 	 double WorldSetting::pixelPerMeter = 100;
 	 Float2 WorldSetting::originSystem = { 0, 1080 };

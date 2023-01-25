@@ -4,7 +4,7 @@
 #include "App.h"
 #include "Projectile.h"
 
-#define WORLD_OPTION_NB 3 
+#define WORLD_OPTION_NB 4 
 
 double UI::length = 0;
 double UI::height = 0;
@@ -15,7 +15,8 @@ static const char* preCalcultedOption[WORLD_OPTION_NB]
 {
     "Earth",
     "Moon",
-    "Mars"
+    "Mars",
+    "Water"
 };
 
 static int usedOption;
@@ -57,7 +58,7 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 
     ProjectileParameters();
     CanonParameters(canon);
-    WorldParameters();
+    WorldParameters(canon);
 
     CloseWindow();
 
@@ -107,7 +108,11 @@ void UI::CanonParameters(Core::Canon* canon)
     if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
         SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon);
-        SliderDouble("Strength##Canon", &canon->power, 15 *(10.0/ Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter));
+        if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
+        {
+            canon->valueChanged = true;
+        }
+
         SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon);
         SliderDouble("Speed Drag", &speedDrag, 0.01, 10);
         SliderDouble("Canon Lengh", &canon->canonLength, 1, 10);
@@ -115,11 +120,15 @@ void UI::CanonParameters(Core::Canon* canon)
     }
 }
 
-void UI::WorldParameters()
+void UI::WorldParameters(Core::Canon* canon)
 {
     if (ImGui::TreeNodeEx("World config",ImGuiTreeNodeFlags_DefaultOpen ))
     {
-        SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -0.01, -50);
+        if (SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -0.01, -50))
+        {
+            canon->valueChanged = true;
+        }
+
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         if (ImGui::Combo("Precalculted values", &usedOption, preCalcultedOption, WORLD_OPTION_NB))
@@ -136,7 +145,7 @@ void UI::LoadWorldOption()
     case 0: // Earth
         Data::WorldSetting::GRAVITY = -9.81;
         Data::WorldSetting::airResistance = 0.1;
-        Data::WorldSetting::airViscosity = 15.6;
+        Data::WorldSetting::airViscosity = 1.56;
         break;
 
     case 1: // Moon
@@ -148,7 +157,14 @@ void UI::LoadWorldOption()
     case 2: // Mars
         Data::WorldSetting::GRAVITY = -3.721;
         Data::WorldSetting::airResistance = 0.118;
-        Data::WorldSetting::airViscosity = 15.6;
+        Data::WorldSetting::airViscosity = 1.56;
+        break;
+
+
+    case 3: // Water
+        Data::WorldSetting::GRAVITY = -9.81;
+        Data::WorldSetting::airResistance = 1.0;
+        Data::WorldSetting::airViscosity = 10.0;
         break;
 
     default:

@@ -5,7 +5,12 @@
 
 using namespace Core;
 
-void Rigidbody::Update(double deltaTime, double lifeTime)
+
+/// <summary>
+/// Simulation des forces appliqué au corps par la méthode d'Euler.
+/// </summary>
+/// <param name="deltaTime"> : Temps entre deux frame</param>
+void Rigidbody::Update(double deltaTime)
 {
 	for (Float2 force : m_AccelerationForces)
 	{

@@ -22,7 +22,7 @@ namespace Core
 
 	public:
 
-		void Update(double deltaTime, double lifeTime);
+		void Update(double deltaTime);
 		void DrawForces();
 		void ClearForces();
 		void AddForce(Float2 force, ForceType type);

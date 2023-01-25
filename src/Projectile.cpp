@@ -54,7 +54,7 @@ namespace Core
 			rigidbody.AddForce(CalcTrail(), Core::ForceType::FT_SPEED);
 			rigidbody.AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, Core::ForceType::FT_ACCELERATION);
 
-			rigidbody.Update(deltaTime, m_lifeTime);
+			rigidbody.Update(deltaTime);
 
 			m_pos = rigidbody.GetPos();
 		}
@@ -85,6 +85,10 @@ namespace Core
 		rigidbody.AddForce(force, type);
 	}
 
+	/// <summary>
+	/// Calcul de la force de trainée a partir de la vitesse et du coefficient de trainée de la sphere calculé en temps réel.
+	/// </summary>
+	/// <returns></returns>
 	Float2 Projectile::CalcTrail()
 	{
 		double v = m_velocity.Magnitude();
@@ -98,9 +102,16 @@ namespace Core
 		return Float2{ -(magnitude) * cos(theta), -(magnitude) * sin(theta) } ;
 	}
 
+	/// <summary>
+	/// Ecoulement de Stokes <br/>
+	/// Calcul du coeficient de trainée : 24/Re 
+	/// Re : Ecoulement du fluide sur la sphere
+	/// Re d'une sphere = (DensiteAir * V * diametre) / ViscoAir
+	/// </summary>
+	/// <returns></returns>
 	double Projectile::CalcTrailCoefficient()
 	{
-		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity * 10) / m_weight);
+		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity) / m_weight);
 	}
 
 	void Projectile::DrawProjectilePath()
