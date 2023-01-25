@@ -238,15 +238,14 @@ void UI::CurrentProjectileParam()
         ImGui::Text(TextFormat("Velocity   : %2.f , %2.f", projectileParameters[itr->first].velocity.x, projectileParameters[itr->first].velocity.y));
         ImGui::Text(TextFormat("Position   : %2.f , %2.f", projectileParameters[itr->first].position.x, projectileParameters[itr->first].position.y));
         ImGui::Text(TextFormat("Current life time : %2.f", projectileParameters[itr->first].currentLifeTime));
-        ImGui::Checkbox("Should projectile die", &projectileParameters[itr->first].shouldDie);
 
+        ImGui::Checkbox("Should projectile die", &projectileParameters[itr->first].shouldDie);
         ImGui::Checkbox("Control pos manually", &projectileParameters[itr->first].controlPos);
         if (projectileParameters[itr->first].controlPos)
         {
             SliderDouble("Lock position X", &projectileParameters[itr->first].position.x, 0 , 1920/Data::WorldSetting::pixelPerMeter);
             SliderDouble("Lock position Y", &projectileParameters[itr->first].position.y, 0.1, 1080 / Data::WorldSetting::pixelPerMeter);
         }
-
 
         ImGui::NewLine();
         ImGui::NewLine();
@@ -260,6 +259,7 @@ void UI::CanonAction(Core::Canon* canon, Renderer::RendererManager& objectManage
     if (ImGui::Button("Reset Position", ImVec2(150, 75)))
     {
         canon->ResetPosition();
+        canon->valueChanged = true;
     }
 }
 

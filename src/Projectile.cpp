@@ -151,10 +151,12 @@ namespace Core
 		m_pos.y = 0;
 		return;
 	}
+
 	bool Projectile::IsOnFloor()
 	{
 		return m_pos.y <= 0;
 	}
+
 	void Projectile::RegisterPosition()
 	{
 		if (m_frameCount < m_frameDuration) return;
