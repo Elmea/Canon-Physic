@@ -53,8 +53,8 @@ void App::Draw()
     BeginDrawing();
     ClearBackground(SKYBLUE);
 
+    m_interface.DrawBackGround();
     m_objectManager.DrawObject();
-
     m_interface.Draw(canon, m_objectManager);
 
     EndDrawing();
