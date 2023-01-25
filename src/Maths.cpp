@@ -77,6 +77,7 @@ Float2::operator Vector2() const
     return v;
 }
 
+
 double Float2::Magnitude()
 {
     return sqrt(x * x + y * y);

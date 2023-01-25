@@ -26,10 +26,15 @@ namespace Core
 		}
 		else
 		{
-			rigidbody.StopVelocity();
-			rigidbody.ClearForces();
-			position = initPos;
+			ResetPosition();
 		}
+	}
+
+	void Canon::ResetPosition()
+	{
+		rigidbody.StopVelocity();
+		rigidbody.ClearForces();
+		position = initPos;
 	}
 
 	Canon::Canon()
