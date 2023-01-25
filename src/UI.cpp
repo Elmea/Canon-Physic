@@ -4,10 +4,21 @@
 #include "App.h"
 #include "Projectile.h"
 
+#define WORLD_OPTION_NB 3 
+
 double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
 std::map<int, ProjectileParameters> UI::projectileParameters = {};
+
+static const char* preCalcultedOption[WORLD_OPTION_NB]
+{
+    "Earth",
+    "Moon",
+    "Mars"
+};
+
+static int usedOption;
 
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
@@ -35,8 +46,6 @@ void UI::Init()
 UI::~UI()
 {
 }
-
-
 
 void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
@@ -113,7 +122,37 @@ void UI::WorldParameters()
         SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -0.01, -50);
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
+        if (ImGui::Combo("Precalculted values", &usedOption, preCalcultedOption, WORLD_OPTION_NB))
+            LoadWorldOption();
+
         ImGui::TreePop();
+    }
+}
+
+void UI::LoadWorldOption()
+{
+    switch (usedOption)
+    {
+    case 0: // Earth
+        Data::WorldSetting::GRAVITY = -9.81;
+        Data::WorldSetting::airResistance = 0.1;
+        Data::WorldSetting::airViscosity = 15.6;
+        break;
+
+    case 1: // Moon
+        Data::WorldSetting::GRAVITY = -1.62;
+        Data::WorldSetting::airResistance = 0.0;
+        Data::WorldSetting::airViscosity = 0.0;
+        break;
+
+    case 2: // Mars
+        Data::WorldSetting::GRAVITY = -3.721;
+        Data::WorldSetting::airResistance = 0.118;
+        Data::WorldSetting::airViscosity = 15.6;
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -150,7 +189,6 @@ void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 void UI::ShowValuesBeforeShoot(Core::Canon* canon)
 {
     NewWindow("Pre calculated values");
-
 
     /* Show values */
     ImGui::Text(TextFormat("Max Horizontal length : %.2f" , canon->maxW     ));

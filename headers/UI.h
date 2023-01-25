@@ -78,4 +78,6 @@ public :
 	void ShowValuesBeforeShoot(Core::Canon* canon);
 	void MoveCannon(Core::Canon* canon);
 	void ShowValuesAfterShoot();
+
+	void LoadWorldOption();
 };
