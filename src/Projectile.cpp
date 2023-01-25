@@ -33,9 +33,6 @@ namespace Core
 			ImpactReaction(deltaTime);
 			return;
 		}
-
-		
-		
 		Move(deltaTime);
 
 		if (m_pos.y >= m_maxHeight)

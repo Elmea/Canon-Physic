@@ -127,6 +127,6 @@ namespace Core
 		DrawTexture(m_cannonBaseTex, destRec.x - (float)size.x / 2 + 25, destRec.y, WHITE);
 
 		/* Draw support of the cannon */
-		DrawRectangle(destRec.x - (float)size.x / 2, raylibPos.y + m_cannonBaseTex.height, (float)size.x, 1080, BLACK);
+		DrawRectangle(0, raylibPos.y + m_cannonBaseTex.height, initPos.x + (float)size.x, 1080, BLACK);
 	}
 }

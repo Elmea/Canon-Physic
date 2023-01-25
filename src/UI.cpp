@@ -99,12 +99,12 @@ void UI::CanonParameters(Core::Canon* canon)
         Core::Rigidbody& canonRbody = canon->GetRigidbody();
         if (SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon))
         {
+            canon->initPos = canon->position;
             canonRbody.SetStartPos(canon->position);
             canon->valueChanged = true;
         }
         if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
         {
-
             canon->valueChanged = true;
         }
         if (SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon))
@@ -203,6 +203,7 @@ void UI::MoveCannon(Core::Canon* canon)
                 if (canon->position.y > maxHeightCanon)
                     canon->position.y = maxHeightCanon;
 
+                canon->initPos = canon->position;
                 canonRbody.SetStartPos(canon->position);
                 canon->valueChanged = true;
             }
