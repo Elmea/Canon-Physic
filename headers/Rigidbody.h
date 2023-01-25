@@ -20,9 +20,6 @@ namespace Core
 		std::vector<Float2> m_speedForces;
 		std::vector<Float2> m_AccelerationForces;
 
-		// Temp 
-		Float2 gravityVal ;
-
 	public:
 
 		void Update(double deltaTime, double lifeTime);

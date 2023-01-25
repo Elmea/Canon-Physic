@@ -58,7 +58,6 @@ namespace Core
 		
 		rigidbody.Update(deltaTime, m_lifeTime);
 
-		//m_pos = ( Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0 )* (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime ) + m_startPos / Data::WorldSetting::pixelPerMeter;
 		m_pos = rigidbody.GetPos();
 
 		if (m_pos.y >= maxHeight)
