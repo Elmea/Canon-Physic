@@ -97,9 +97,8 @@ namespace Core
 	{
 		rigidbody.SetStartPos(position);
 		ResolveCollision(weight);
-		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager, m_nbProjectileCreated);
+		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
-		m_nbProjectileCreated++;
 	}
 
 	void Canon::Update(double deltaTime)

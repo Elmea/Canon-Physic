@@ -11,6 +11,14 @@ namespace Core
 	class Canon;
 }
 
+struct Clouds
+{
+	float speed;
+	Float2 pos; /* In Raylib coordinates */
+	float scale;
+	int opacity;
+};
+
 struct ProjectileParameters
 {
 	Float2 velocity;
@@ -36,6 +44,13 @@ private :
 	bool SliderDouble(const char* text, double* v, double min, double max);
 	bool SliderDoubleN(const char* text, int nbValues , double* v, double min, double max);
 	bool ClickInRectangle(Float2 mousePos, Rectangle rec);
+
+	/* Background values */
+	void DrawBackGround();
+	float minTimeBetweenSpawn = 0;
+	float currentTime;
+	std::vector<Clouds> clouds;
+	Texture2D background;
 
 	double weight = 10;
 	double sizeP = 5;

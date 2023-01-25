@@ -9,9 +9,11 @@ namespace Core
 {
 	double Projectile::lifeTimeAfterCollision = 2.5f;
 
-	Projectile::Projectile(Float2 position, double radius, double weight, const Float2& projSpeedZero, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
-		m_frontSurface(PI* ((radius* radius) / 16.0)), m_manager(_manager), m_id(_id)
+	Projectile::Projectile(Float2 position, double radius, double weight, const Float2& projSpeedZero, Renderer::RendererManager* _manager) : m_pos(position), m_radius(radius), m_weight(weight),
+		m_frontSurface(PI* ((radius* radius) / 16.0)), m_manager(_manager)
 	{
+		m_id = nbProjectileCreated;
+		nbProjectileCreated++;
 		m_startPos = position;
 		rigidbody.SetStartPos(position / Data::WorldSetting::pixelPerMeter);
 		m_pos = position / Data::WorldSetting::pixelPerMeter;
@@ -33,6 +35,7 @@ namespace Core
 			ImpactReaction(deltaTime);
 			return;
 		}
+		
 		Move(deltaTime);
 
 		if (m_pos.y >= m_maxHeight)
@@ -121,11 +124,13 @@ namespace Core
 
 		if (UI::projectileParameters[m_id].shouldDie && m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
 		{
+			nbProjectileCreated--;
 			UI::projectileParameters.erase(m_id);
 			m_manager->ShouldRemove(this);
 			return;
 		}
 
+		DrawProjectilePath();
 		m_lifeTime += deltaTime;
 		m_pos.y = 0;
 		return;
