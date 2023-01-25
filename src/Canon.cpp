@@ -13,7 +13,25 @@ namespace Core
 		
 		size.x = m_canonTex.width;
 		size.y = m_canonTex.height;
+		rigidbody.SetStartPos(position);
+		initPos = position;
+
 	}
+
+	void Canon::ResolveFriction()
+	{
+		if (rigidbody.GetVelocity().x < 0)
+		{
+			rigidbody.AddForce(Float2{ 0.03, 0 }, ForceType::FT_SPEED);
+		}
+		else
+		{
+			rigidbody.StopVelocity();
+			rigidbody.ClearForces();
+			position = initPos;
+		}
+	}
+
 	Canon::Canon()
 	{
 		m_activeShootPrediction = true;
@@ -22,26 +40,74 @@ namespace Core
 
 		size.x  = m_canonTex.width;
 		size.y  = m_canonTex.height;
+		initPos = position;
+
 	}
 
 	Canon::~Canon()
 	{
 	}
 
+	void Canon::ResolveCollision(double p_weight)
+	{
+		Float2 speedCanon =( (speedZero * p_weight) / weight ) * -1;
+		speedCanon.y = 0;
+		rigidbody.AddForce(speedCanon, ForceType::FT_SPEED);
+	}
+
 	void Canon::ShowPredictionShoot()
 	{
+		if (valueChanged)
+		{
+			valueChanged = false;
+			/* Setup values */
+			double RadAngle = DEG2RAD * angle;
+			speedZero = { power * cos(RadAngle) , power * sin(-RadAngle) };
+			double ySqr = speedZero.y * speedZero.y;
+			double realHeight = position.y / Data::WorldSetting::pixelPerMeter;
 
+			double delta = sqrt((ySqr)+2 * -Data::WorldSetting::GRAVITY * realHeight);
+
+			/* Calculation */
+			timeInAir = (speedZero.y + delta) / -Data::WorldSetting::GRAVITY;
+			maxW = timeInAir * speedZero.x;
+			maxH = (ySqr / (2.0 * (-Data::WorldSetting::GRAVITY))) + realHeight;
+
+			posImpact = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0) * (timeInAir * timeInAir) } + speedZero * timeInAir) + position / Data::WorldSetting::pixelPerMeter;
+			Float2 acc = { 0, Data::WorldSetting::GRAVITY };
+			speedImpact = acc * timeInAir + speedZero;
+		}
+		
+		DrawCurvePrediction();
+	}
+
+	void Canon::DrawCurvePrediction()
+	{
+		Float2 raylibSPos  = Data::WorldSetting::GetRaylibPos(position);
+		Float2 raylibEPos  = Data::WorldSetting::GetRaylibPos(posImpact * Data::WorldSetting::pixelPerMeter);
+		Float2 raylibSZero = Data::WorldSetting::GetRaylibSpeed(speedZero);
+		Float2 raylibSEnd  = Data::WorldSetting::GetRaylibSpeed(speedImpact);
+
+		DrawCircle(raylibEPos.x, raylibEPos.y, 15, RED);
+		Float2 controlPoint = Float2::LineIntersection(raylibSPos, raylibSZero, raylibEPos, raylibSEnd);
+		DrawLineBezierQuad(raylibSPos, raylibEPos, controlPoint, 2, LIME);
 	}
 
 	void Canon::Shoot(double radius, double weight)
 	{
-		Projectile* pProjectile = new Projectile(position, radius, weight, power, angle, m_renderManager, m_nbProjectileCreated);
+		rigidbody.SetStartPos(position);
+		ResolveCollision(weight);
+		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager, m_nbProjectileCreated);
 		m_renderManager->AddObject(pProjectile);
 		m_nbProjectileCreated++;
 	}
 
 	void Canon::Update(double deltaTime)
 	{
+		ShowPredictionShoot();
+		rigidbody.Update(deltaTime, 1);
+		position = rigidbody.GetPos();
+		ResolveFriction();
 	}
 
 	void Canon::Draw()

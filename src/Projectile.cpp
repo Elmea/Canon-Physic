@@ -9,14 +9,15 @@ namespace Core
 {
 	double Projectile::lifeTimeAfterCollision = 2.5f;
 
-	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
+	Projectile::Projectile(Float2 position, double radius, double weight, const Float2& projSpeedZero, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
 		m_frontSurface(PI* ((radius* radius) / 16.0)), m_manager(_manager), m_id(_id)
 	{
 		m_startPos = position;
+		rigidbody.SetStartPos(position / Data::WorldSetting::pixelPerMeter);
+		m_pos = position / Data::WorldSetting::pixelPerMeter;
 		m_maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
-		angle = DEG2RAD * angle;
-		m_vInit = Float2{ power * cos(angle), power * sin(-angle) };
-		AddForce(m_vInit, 1, true);
+		m_vInit = projSpeedZero;
+		AddForce(m_vInit, Core::ForceType::FT_SPEED);
 	}
 
 	Projectile::~Projectile()
@@ -33,6 +34,8 @@ namespace Core
 			return;
 		}
 
+		
+		
 		Move(deltaTime);
 
 		if (m_pos.y >= m_maxHeight)
@@ -48,34 +51,29 @@ namespace Core
 	{
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
 		DrawCircle(raylibPos.x, raylibPos.y, m_radius, PURPLE);
-
-		if (!IsOnFloor()) return;
-
-		DrawProjectilePath();
 	}
 
-	void Projectile::AddForce(Float2 force, double deltaTime, bool debug)
+	void Projectile::AddForce(Float2 force, Core::ForceType type)
 	{
-		Float2 f = force * deltaTime;
-		m_velocity = m_velocity + f;
+		rigidbody.AddForce(force, type);
 	}
 
 	Float2 Projectile::CalcTrail()
 	{
-		if (Data::WorldSetting::airResistance == 0)
+		double v = m_velocity.Magnitude();
+		if (Data::WorldSetting::airResistance == 0 || v == 0)
 			return { 0,0 };
 
-		double v = m_velocity.Magnitude();
-		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v) / 100;
+		double magnitude = (0.5 * Data::WorldSetting::airResistance * Data::WorldSetting::airResistance * m_frontSurface * CalcTrailCoefficient() * v * v)/ 100;
 
 		double theta = atan2(m_velocity.y, m_velocity.x);
 
-		return { -(magnitude - (m_weight / 1000.0)) * cos(theta), -(magnitude - (m_weight / 1000.0)) * sin(theta) };
+		return { -(magnitude - (m_weight/1000.0)) * cos(theta), -(magnitude - (m_weight / 1000.0)) * sin(theta) };
 	}
 
 	double Projectile::CalcTrailCoefficient()
 	{
-		return 24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity * 10);
+		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity * 10) / m_weight);
 	}
 
 	void Projectile::DrawProjectilePath()
@@ -102,13 +100,17 @@ namespace Core
 	}
 	void Projectile::Move(double deltaTime)
 	{
+	
 		if (!UI::projectileParameters[m_id].controlPos)
 		{
-			AddForce(CalcTrail(), deltaTime);
-			AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, deltaTime);
+			m_velocity = rigidbody.GetVelocity();
 
-			Float2 vel = m_velocity;
-			m_pos = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0) * (m_lifeTime * m_lifeTime) } + m_vInit * m_lifeTime) + m_startPos / Data::WorldSetting::pixelPerMeter;
+			rigidbody.AddForce(CalcTrail(), Core::ForceType::FT_SPEED);
+			rigidbody.AddForce(Float2{ 0, Data::WorldSetting::GRAVITY }, Core::ForceType::FT_ACCELERATION);
+
+			rigidbody.Update(deltaTime, m_lifeTime);
+
+			m_pos = rigidbody.GetPos();
 		}
 		else
 		{

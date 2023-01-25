@@ -1,5 +1,6 @@
 #pragma once
 #include "Maths.h"
+#include "Rigidbody.h"
 #include "RenderManager.h"
 
 namespace Core
@@ -24,7 +25,9 @@ namespace Core
 		double m_maxHeight;
 
 		const double m_frontSurface;
+
 		Float2 m_velocity{ 0, 0 };
+		Rigidbody rigidbody;
 
 		Float2 CalcTrail();
 		double CalcTrailCoefficient();
@@ -38,15 +41,16 @@ namespace Core
 	public:
 		static double lifeTimeAfterCollision;
 
-		Projectile(Float2 position, double radius, double weight, double power, double angle , Renderer::RendererManager* _manager , int _id);
+		Projectile(Float2 position, double radius, double weight, const Float2& speedZero , Renderer::RendererManager* _manager , int _id);
 		~Projectile();
 
 		double& GetWeightRef() { return m_weight; }
 		double& GetRadiusRef() { return m_radius; }
+		Rigidbody& GetRigidbody() { return rigidbody; }
 
 		void Update(double deltaTime);
 		void Draw();
-		void AddForce(Float2 force, double deltaTime, bool debug = false);
+		void AddForce(Float2 force, Core::ForceType type);
 		Float2 GetPos() { return m_pos; };
 	};
 }
