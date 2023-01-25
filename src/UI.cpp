@@ -28,7 +28,6 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 void UI::Init()
 {
     
-
     rlImGuiSetup(true);
 }
 
@@ -71,14 +70,32 @@ void UI::CanonParameters(Core::Canon* canon)
 {
     if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        Core::Rigidbody& canonRbody = canon->GetRigidbody();
         if (SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon))
+        {
+            canonRbody.SetStartPos(canon->position);
             canon->valueChanged = true;
-        if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))   
+        }
+        if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
+        {
+
             canon->valueChanged = true;
+        }
         if (SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon))
+        {
             canon->valueChanged = true;
+
+        }
+        if (SliderDouble("Weight", &canon->weight, 1, 1000))
+        {
+            canon->valueChanged = true;
+
+        }
         if (SliderDouble("Speed Drag", &speedDrag, 0.01, 100))
+        {
+
             canon->valueChanged = true;
+        }
         
         ImGui::TreePop();
     }
@@ -142,6 +159,7 @@ void UI::ShowValuesBeforeShoot(Core::Canon* canon)
 void UI::MoveCannon(Core::Canon* canon)
 {
     Float2 mousePos = {GetMouseX(),  GetMouseY()};
+    Core::Rigidbody& canonRbody = canon->GetRigidbody();
 
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
     {
@@ -158,6 +176,7 @@ void UI::MoveCannon(Core::Canon* canon)
                 if (canon->position.y > maxHeightCanon)
                     canon->position.y = maxHeightCanon;
 
+                canonRbody.SetStartPos(canon->position);
                 canon->valueChanged = true;
             }
         }

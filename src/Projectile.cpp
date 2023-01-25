@@ -9,15 +9,14 @@ namespace Core
 {
 	double Projectile::lifeTimeAfterCollision = 2.5f;
 
-	Projectile::Projectile(Float2 position, double radius, double weight, double power, double angle, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
+	Projectile::Projectile(Float2 position, double radius, double weight, const Float2& projSpeedZero, Renderer::RendererManager* _manager, int _id) : m_pos(position), m_radius(radius), m_weight(weight),
 		m_frontSurface(PI* ((radius* radius) / 16.0)), m_manager(_manager), m_id(_id)
 	{
 		m_startPos = position;
 		rigidbody.SetStartPos(position / Data::WorldSetting::pixelPerMeter);
 		m_pos = position / Data::WorldSetting::pixelPerMeter;
 		m_maxHeight = position.y / Data::WorldSetting::pixelPerMeter;
-		angle = DEG2RAD * angle;
-		m_vInit = Float2{ power * cos(angle), power * sin(-angle) };
+		m_vInit = projSpeedZero;
 		AddForce(m_vInit, Core::ForceType::FT_SPEED);
 	}
 
