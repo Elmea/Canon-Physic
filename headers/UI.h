@@ -70,7 +70,7 @@ public :
 	/* ImGui */
 	void ProjectileParameters();
 	void CanonParameters(Core::Canon* canon);
-	void WorldParameters();
+	void WorldParameters(Core::Canon* canon);
 	void CurrentProjectileParam();
 
 	void Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager);
@@ -78,4 +78,6 @@ public :
 	void ShowValuesBeforeShoot(Core::Canon* canon);
 	void MoveCannon(Core::Canon* canon);
 	void ShowValuesAfterShoot();
+
+	void LoadWorldOption();
 };

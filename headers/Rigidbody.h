@@ -22,7 +22,7 @@ namespace Core
 
 	public:
 		void StopVelocity() { m_velocity = Float2{ 0,0 }; }
-		void Update(double deltaTime, double lifeTime);
+		void Update(double deltaTime);
 		void DrawForces();
 		void ClearForces();
 		void AddForce(Float2 force, ForceType type);

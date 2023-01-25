@@ -4,10 +4,22 @@
 #include "App.h"
 #include "Projectile.h"
 
+#define WORLD_OPTION_NB 4 
+
 double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
 std::map<int, ProjectileParameters> UI::projectileParameters = {};
+
+static const char* preCalcultedOption[WORLD_OPTION_NB]
+{
+    "Earth",
+    "Moon",
+    "Mars",
+    "Water"
+};
+
+static int usedOption;
 
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
@@ -35,8 +47,6 @@ UI::~UI()
 {
 }
 
-
-
 void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
     ShowFPS();
@@ -47,8 +57,8 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 
     ProjectileParameters();
     CanonParameters(canon);
-    WorldParameters();
     CurrentProjectileParam();
+    WorldParameters(canon);
 
     CloseWindow();
 
@@ -130,14 +140,55 @@ void UI::CanonParameters(Core::Canon* canon)
     }
 }
 
-void UI::WorldParameters()
+void UI::WorldParameters(Core::Canon* canon)
 {
     if (ImGui::TreeNodeEx("World config",ImGuiTreeNodeFlags_DefaultOpen ))
     {
-        SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -1, 50);
+        if (SliderDouble("Gravity", &Data::WorldSetting::GRAVITY, -0.01, -50))
+        {
+            canon->valueChanged = true;
+        }
+
         SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 1);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
+        if (ImGui::Combo("Precalculted values", &usedOption, preCalcultedOption, WORLD_OPTION_NB))
+            LoadWorldOption();
+
         ImGui::TreePop();
+    }
+}
+
+void UI::LoadWorldOption()
+{
+    switch (usedOption)
+    {
+    case 0: // Earth
+        Data::WorldSetting::GRAVITY = -9.81;
+        Data::WorldSetting::airResistance = 0.1;
+        Data::WorldSetting::airViscosity = 1.56;
+        break;
+
+    case 1: // Moon
+        Data::WorldSetting::GRAVITY = -1.62;
+        Data::WorldSetting::airResistance = 0.0;
+        Data::WorldSetting::airViscosity = 0.0;
+        break;
+
+    case 2: // Mars
+        Data::WorldSetting::GRAVITY = -3.721;
+        Data::WorldSetting::airResistance = 0.118;
+        Data::WorldSetting::airViscosity = 1.56;
+        break;
+
+
+    case 3: // Water
+        Data::WorldSetting::GRAVITY = -9.81;
+        Data::WorldSetting::airResistance = 1.0;
+        Data::WorldSetting::airViscosity = 10.0;
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -159,6 +210,7 @@ void UI::CurrentProjectileParam()
             SliderDouble("Lock position Y", &projectileParameters[itr->first].position.y, 0.1, 1080 / Data::WorldSetting::pixelPerMeter);
         }
 
+
         ImGui::NewLine();
         ImGui::NewLine();
     }
@@ -166,14 +218,13 @@ void UI::CurrentProjectileParam()
 
 void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
-    if (ImGui::Button("Shoot", ImVec2(150,75)))
+    if (ImGui::Button("Shoot", ImVec2(150,75)) || ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Space))
         canon->Shoot(sizeP,weight);
 }
 
 void UI::ShowValuesBeforeShoot(Core::Canon* canon)
 {
     NewWindow("Pre calculated values");
-
 
     /* Show values */
     ImGui::Text(TextFormat("Max Horizontal length : %.2f" , canon->maxW     ));

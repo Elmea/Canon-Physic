@@ -105,7 +105,7 @@ namespace Core
 	void Canon::Update(double deltaTime)
 	{
 		ShowPredictionShoot();
-		rigidbody.Update(deltaTime, 1);
+		rigidbody.Update(deltaTime);
 		position = rigidbody.GetPos();
 		ResolveFriction();
 	}
