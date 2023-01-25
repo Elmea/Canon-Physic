@@ -87,7 +87,7 @@ public :
 	void WorldParameters(Core::Canon* canon);
 	void CurrentProjectileParam();
 
-	void Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager);
+	void CanonAction(Core::Canon* canon, Renderer::RendererManager& objectManager);
 
 	void ShowValuesBeforeShoot(Core::Canon* canon);
 	void MoveCannon(Core::Canon* canon);

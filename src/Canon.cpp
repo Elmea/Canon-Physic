@@ -10,7 +10,7 @@ namespace Core
 		m_activeShootPrediction = true;
 		m_canonTex = LoadTexture("assets/Cannon.png");
 		m_cannonBaseTex = LoadTexture("assets/Cannonbase.png");
-		
+
 		size.x = m_canonTex.width;
 		size.y = m_canonTex.height;
 		rigidbody.SetStartPos(position);
@@ -51,7 +51,7 @@ namespace Core
 
 	Float2 Canon::ResolveCollision(double p_weight)
 	{
-		Float2 speedCanon =( (speedZero * p_weight) / weight ) * -1;
+		Float2 speedCanon = ((speedZero * p_weight) / weight) * -1;
 		speedCanon.y = 0;
 		rigidbody.AddForce(speedCanon, ForceType::FT_SPEED);
 
@@ -86,16 +86,16 @@ namespace Core
 			Float2 acc = { 0, Data::WorldSetting::GRAVITY };
 			speedImpact = acc * timeInAir + speedZero;
 		}
-		
+
 		DrawCurvePrediction();
 	}
 
 	void Canon::DrawCurvePrediction()
 	{
-		Float2 raylibSPos  = Data::WorldSetting::GetRaylibPos(position);
-		Float2 raylibEPos  = Data::WorldSetting::GetRaylibPos(posImpact * Data::WorldSetting::pixelPerMeter);
+		Float2 raylibSPos = Data::WorldSetting::GetRaylibPos(position);
+		Float2 raylibEPos = Data::WorldSetting::GetRaylibPos(posImpact * Data::WorldSetting::pixelPerMeter);
 		Float2 raylibSZero = Data::WorldSetting::GetRaylibSpeed(speedZero);
-		Float2 raylibSEnd  = Data::WorldSetting::GetRaylibSpeed(speedImpact);
+		Float2 raylibSEnd = Data::WorldSetting::GetRaylibSpeed(speedImpact);
 
 		DrawCircle(raylibEPos.x, raylibEPos.y, 15, RED);
 		Float2 controlPoint = Float2::LineIntersection(raylibSPos, raylibSZero, raylibEPos, raylibSEnd);
@@ -104,7 +104,11 @@ namespace Core
 
 	void Canon::Shoot(double radius, double weight)
 	{
-		rigidbody.SetStartPos(position);
+		if (isCollisionActive)
+		{
+			rigidbody.SetStartPos(position);
+			ResolveCollision(weight);
+		}
 		Float2 frictionCoef = ResolveCollision(weight);
 		Projectile* pProjectile = new Projectile(position, radius, weight, frictionCoef, m_renderManager);
 		m_renderManager->AddObject(pProjectile);

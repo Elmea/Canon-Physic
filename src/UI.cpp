@@ -81,16 +81,19 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
     NewWindow("MainWindow");
 
     ProjectileParameters();
+    ImGui::Spacing();
     CanonParameters(canon);
-    CurrentProjectileParam();
+    ImGui::Spacing();
     WorldParameters(canon);
+    ImGui::Spacing();
+    CurrentProjectileParam();
 
     CloseWindow();
 
     ShowValuesBeforeShoot(canon);
     ShowValuesAfterShoot();
     NewWindow("Game");
-    Shoot(canon, objectManager);
+    CanonAction(canon, objectManager);
     CloseWindow();
 
     EndFrame();
@@ -162,6 +165,10 @@ void UI::CanonParameters(Core::Canon* canon)
         {
             canon->valueChanged = true;
         }
+        ImGui::Checkbox("Canon Collision", &canon->isCollisionActive);
+       
+         
+       
 
         ImGui::Text("Canon x delta : %f", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
         ImGui::Text("Canon x velocity : %f", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
@@ -246,10 +253,14 @@ void UI::CurrentProjectileParam()
     }
 }
 
-void UI::Shoot(Core::Canon* canon, Renderer::RendererManager& objectManager)
+void UI::CanonAction(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
     if (ImGui::Button("Shoot", ImVec2(150,75)) || ImGui::IsKeyPressed(ImGuiKey::ImGuiKey_Space))
         canon->Shoot(sizeP,weight);
+    if (ImGui::Button("Reset Position", ImVec2(150, 75)))
+    {
+        
+    }
 }
 
 void UI::ShowValuesBeforeShoot(Core::Canon* canon)
