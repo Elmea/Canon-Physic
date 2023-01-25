@@ -62,6 +62,9 @@ void App::Draw()
 
 void App::Run()
 {
+    /* First iteration to setup well values */
+    Update();
+    canon->valueChanged = true;
 
     while (!WindowShouldClose())   
     {
