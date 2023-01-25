@@ -64,6 +64,7 @@ public :
 	static double length;
 	static double height;
 	static double timeAir;
+	static bool drawProjectileForces;
 
 	static std::map<int , ProjectileParameters> projectileParameters;
 

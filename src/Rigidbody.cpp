@@ -23,9 +23,6 @@ namespace Core
 		}
 
 		m_pos += m_velocity * deltaTime;
-
-		ClearForces();
-
 	}
 
 	void Rigidbody::AddForce(Float2 force, ForceType type)

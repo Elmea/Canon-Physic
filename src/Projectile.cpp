@@ -52,7 +52,8 @@ namespace Core
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
 		DrawCircle(raylibPos.x, raylibPos.y, m_radius, YELLOW);
 		if(m_hasHitGround)DrawProjectilePath();
-		
+		if (UI::drawProjectileForces) rigidbody.DrawForces();
+		rigidbody.ClearForces();
 	}
 
 	void Projectile::AddForce(Float2 force, Core::ForceType type)
@@ -113,6 +114,7 @@ namespace Core
 
 		
 	}
+
 	void Projectile::Move(double deltaTime)
 	{
 	
