@@ -69,12 +69,14 @@ namespace Core
 		{
 			timeInCanon = canonLength / speedZero.Magnitude();
 			valueChanged = false;
+
 			/* Setup values */
 			double RadAngle = DEG2RAD * angle;
 			speedZero = { power * cos(RadAngle) , power * sin(-RadAngle) };
+			
+			/* Set the values to make equation more readable*/
 			double ySqr = speedZero.y * speedZero.y;
 			double realHeight = position.y / Data::WorldSetting::pixelPerMeter;
-
 			double delta = sqrt((ySqr)+2 * -Data::WorldSetting::GRAVITY * realHeight);
 
 			/* Calculation */
@@ -104,13 +106,18 @@ namespace Core
 
 	void Canon::Shoot(double radius, double weight)
 	{
+		Float2 newSpeed;
 		if (isCollisionActive)
 		{
 			rigidbody.SetStartPos(position);
-			ResolveCollision(weight);
+			newSpeed = ResolveCollision(weight);
 		}
-		Float2 frictionCoef = ResolveCollision(weight);
-		Projectile* pProjectile = new Projectile(position, radius, weight, frictionCoef, m_renderManager);
+		else 
+		{
+			newSpeed = speedZero;
+		}
+
+		Projectile* pProjectile = new Projectile(position, radius, weight, newSpeed, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
 	}
 
