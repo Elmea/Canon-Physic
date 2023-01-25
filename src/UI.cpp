@@ -158,7 +158,7 @@ void UI::CanonParameters(Core::Canon* canon)
 
             canon->valueChanged = true;
         }
-        if (SliderDouble("Canon Lengh", &canon->canonLength, 1, 10))
+        if (SliderDouble("Canon Lengh", &canon->canonLength, 0, 10))
         {
             canon->valueChanged = true;
         }
