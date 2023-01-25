@@ -21,6 +21,12 @@ static const char* preCalcultedOption[WORLD_OPTION_NB]
 
 static int usedOption;
 
+float RandomFloat(float min, float max)
+{
+    float r = (float)rand() / (float)RAND_MAX;
+    return min + r * (max - min);
+}
+
 bool UI::SliderDouble(const char* text, double* v, double min, double max)
 {
     return ImGui::SliderScalar(text, ImGuiDataType_Double, v, &min, &max);
@@ -37,9 +43,33 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
             (mousePos.y > rec.y && mousePos.y < (double)(rec.y + rec.height));
 }
 
+void UI::DrawBackGround()
+{
+    if (clouds.size() < 15)
+    {
+        currentTime += App::m_deltaTime;
+        if (currentTime > minTimeBetweenSpawn)
+        {
+            clouds.push_back(Clouds{ RandomFloat(0.15 , 0.4), Float2 {1920 , RandomFloat(0,300)}, RandomFloat(0.05f , 0.2f)  , (int)RandomFloat(75,255) });
+            currentTime = 0.f;
+            minTimeBetweenSpawn = RandomFloat(8.f, 20.f);
+        }
+    }
+
+    for (Clouds& cl : clouds)
+    {
+        cl.pos.x -= cl.speed;
+        if (cl.pos.x <= -(background.width * cl.scale))
+            cl.pos.x = 1920;
+
+        Color color = { 255,255,255, cl.opacity };
+        DrawTextureEx(background, cl.pos, 0.0f, cl.scale, color);
+    }  
+}
+
 void UI::Init()
 {
-    
+    background = LoadTexture("assets/cloud.png");
     rlImGuiSetup(true);
 }
 
@@ -49,6 +79,7 @@ UI::~UI()
 
 void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
+    DrawBackGround();
     ShowFPS();
     NewFrame();
 
@@ -109,12 +140,12 @@ void UI::CanonParameters(Core::Canon* canon)
         Core::Rigidbody& canonRbody = canon->GetRigidbody();
         if (SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon))
         {
+            canon->initPos = canon->position;
             canonRbody.SetStartPos(canon->position);
             canon->valueChanged = true;
         }
         if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
         {
-
             canon->valueChanged = true;
         }
         if (SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon))
@@ -254,6 +285,7 @@ void UI::MoveCannon(Core::Canon* canon)
                 if (canon->position.y > maxHeightCanon)
                     canon->position.y = maxHeightCanon;
 
+                canon->initPos = canon->position;
                 canonRbody.SetStartPos(canon->position);
                 canon->valueChanged = true;
             }

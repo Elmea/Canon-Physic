@@ -97,9 +97,8 @@ namespace Core
 	{
 		rigidbody.SetStartPos(position);
 		ResolveCollision(weight);
-		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager, m_nbProjectileCreated);
+		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
-		m_nbProjectileCreated++;
 	}
 
 	void Canon::Update(double deltaTime)
@@ -127,6 +126,6 @@ namespace Core
 		DrawTexture(m_cannonBaseTex, destRec.x - (float)size.x / 2 + 25, destRec.y, WHITE);
 
 		/* Draw support of the cannon */
-		DrawRectangle(destRec.x - (float)size.x / 2, raylibPos.y + m_cannonBaseTex.height, (float)size.x, 1080, BLACK);
+		DrawRectangle(0, raylibPos.y + m_cannonBaseTex.height, initPos.x + (float)size.x, 1080, BLACK);
 	}
 }
