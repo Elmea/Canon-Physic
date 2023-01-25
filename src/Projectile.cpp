@@ -99,7 +99,7 @@ namespace Core
 
 		double theta = atan2(m_velocity.y, m_velocity.x);
 
-		return Float2{ -(magnitude) * cos(theta), -(magnitude) * sin(theta) } ;
+		return Float2{ -(magnitude / m_weight) * cos(theta), -(magnitude / m_weight) * sin(theta) } ;
 	}
 
 	/// <summary>
@@ -111,7 +111,7 @@ namespace Core
 	/// <returns></returns>
 	double Projectile::CalcTrailCoefficient()
 	{
-		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity) / m_weight);
+		return (24.0 / ((Data::WorldSetting::airResistance * m_velocity.Magnitude() * m_radius * 2) / Data::WorldSetting::airViscosity));
 	}
 
 	void Projectile::DrawProjectilePath()
