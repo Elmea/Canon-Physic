@@ -1,6 +1,5 @@
 <link  href="style.css" rel="stylesheet"></link>
-<body>
-
+<div class = body>
 <h1> TP : Canon Projet </h1>
 
 <h2> Groupe : </h2>  
