@@ -25,8 +25,6 @@ void App::CalcDeltaTime()
     m_lastFrame = now;
 }
 
-
-
 void App::Init(int width , int height)
 {
 	m_height = height;
@@ -51,7 +49,7 @@ void App::Update()
 void App::Draw()
 {
     BeginDrawing();
-    ClearBackground(SKYBLUE);
+    ClearBackground(UI::backgroundColor);
 
     m_interface.DrawBackGround();
     m_objectManager.DrawObject();

@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "Projectile.h"
 #include "SimulationData.h"
+#include "UI.h"
 
 namespace Core
 {
@@ -75,11 +76,11 @@ namespace Core
 		/* Calcul du coefficient de friction */
 		float weight = Data::WorldSetting::GRAVITY * p_weight;
 		double RadAngle = DEG2RAD * angle;
-		
+
 		/* Valeur brut du a l'enoncé */
 		double deccelerationFriction = -2;
 		double coefFriction = sqrt(2.f * deccelerationFriction * canonLength + (speedZero.Magnitude() * speedZero.Magnitude()));
-		return {coefFriction * cos(RadAngle) , coefFriction * sin(-RadAngle)};
+		return { coefFriction * cos(RadAngle) , coefFriction * sin(-RadAngle) };
 	}
 
 	/// <summary>
@@ -148,7 +149,7 @@ namespace Core
 
 	void Canon::Update(double deltaTime)
 	{
-		ShowPredictionShoot();
+		if (UI::drawShootPrediction) ShowPredictionShoot();
 		rigidbody.Update(deltaTime);
 		position = rigidbody.GetPos();
 		ResolveFriction();
@@ -171,6 +172,6 @@ namespace Core
 		DrawTexture(m_cannonBaseTex, destRec.x - (float)size.x / 2 + 25, destRec.y, WHITE);
 
 		/* Draw support of the cannon */
-		DrawRectangle(0, raylibPos.y + m_cannonBaseTex.height, initPos.x + (float)size.x, 1080, BLACK);
+		DrawRectangle(0, raylibPos.y + m_cannonBaseTex.height, initPos.x + (float)size.x/2, 1080, { 80, 80, 80 , 250 });
 	}
 }

@@ -10,6 +10,10 @@ double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
 bool UI::drawProjectileForces = false;
+bool UI::drawProjectilePath = true;
+bool UI::drawShootPrediction = true;
+
+Color UI::backgroundColor = SKYBLUE;
 std::map<int, ProjectileParameters> UI::projectileParameters = {};
 
 static const char* preCalcultedOption[WORLD_OPTION_NB]
@@ -46,20 +50,23 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 
 void UI::DrawBackGround()
 {
-    if (clouds.size() < 15)
-    { 
-        clouds.push_back(Clouds{ RandomFloat(0.35 , 0.65), Float2 {RandomFloat(0,1920) , RandomFloat(0,300)}, RandomFloat(0.05f , 0.2f)  , (int)RandomFloat(75,255) });
-    }
-
-    for (Clouds& cl : clouds)
+    if (m_drawClouds)
     {
-        cl.pos.x -= cl.speed;
-        if (cl.pos.x <= -(background.width * cl.scale))
-            cl.pos.x = 1900;
+        if (clouds.size() < 15)
+        { 
+            clouds.push_back(Clouds{ RandomFloat(0.35 , 0.65), Float2 {RandomFloat(0,1920) , RandomFloat(0,300)}, RandomFloat(0.05f , 0.2f)  , (int)RandomFloat(75,255) });
+        }
 
-        Color color = { 255,255,255, cl.opacity };
-        DrawTextureEx(background, cl.pos, 0.0f, cl.scale, color);
-    }  
+        for (Clouds& cl : clouds)
+        {
+            cl.pos.x -= cl.speed;
+            if (cl.pos.x <= -(background.width * cl.scale))
+                cl.pos.x = 1900;
+
+            Color color = { 255,255,255, cl.opacity };
+            DrawTextureEx(background, cl.pos, 0.0f, cl.scale, color);
+        }  
+    }
 }
 
 void UI::Init()
@@ -128,6 +135,7 @@ void UI::ProjectileParameters()
         SliderDouble("Size (m)##Projectile", &sizeP, 4, 50);
         SliderDouble("Life Time (s)##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
         ImGui::Checkbox("Draw forces", &drawProjectileForces);
+        ImGui::Checkbox("Draw path", &drawProjectilePath);
         ImGui::TreePop();
     }
 }
@@ -143,7 +151,7 @@ void UI::CanonParameters(Core::Canon* canon)
             canonRbody.SetStartPos(canon->position);
             canon->valueChanged = true;
         }
-        if (SliderDouble("Strength (N) ##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
+        if (SliderDouble("Bullet speed (m/s) ##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
         {
             canon->valueChanged = true;
         }
@@ -157,22 +165,16 @@ void UI::CanonParameters(Core::Canon* canon)
             canon->valueChanged = true;
 
         }
-        if (SliderDouble("Canon Lengh (m) ##Canon", &canon->canonLength, 0, 10))
+        if (SliderDouble("Canon Lengh (m) ##Canon", &canon->canonLength, 0, 3))
         {
             canon->valueChanged = true;
         }
-        if (SliderDouble("Speed Drag##Canon", &speedDrag, 0.01, 100))
-        {
 
-            canon->valueChanged = true;
-        }
+        ImGui::Checkbox("Shoot prediction##Canon", &drawShootPrediction);
         ImGui::Checkbox("Canon Collision##Canon", &canon->isCollisionActive);
        
-         
-       
-
-        ImGui::Text("Canon distance from origin : %2.f m", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
-        ImGui::Text("Canon speed  : %2.f m/s", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
+        ImGui::Text("Canon x delta : %f", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
+        ImGui::Text("Canon x velocity : %f", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
 
         ImGui::TreePop();
     }
@@ -207,18 +209,26 @@ void UI::LoadWorldOption()
         Data::WorldSetting::GRAVITY = -9.81;
         Data::WorldSetting::airResistance = 0.1;
         Data::WorldSetting::airViscosity = 1.56;
+        m_drawClouds = true;
+        backgroundColor = SKYBLUE;
+        background = LoadTexture("assets/cloud.png");
         break;
 
     case 1: // Moon
         Data::WorldSetting::GRAVITY = -1.62;
         Data::WorldSetting::airResistance = 0.0;
         Data::WorldSetting::airViscosity = 0.0;
+        m_drawClouds = true;
+        backgroundColor = BLACK;
+        background = LoadTexture("assets/star.png");
         break;
 
     case 2: // Mars
         Data::WorldSetting::GRAVITY = -3.721;
         Data::WorldSetting::airResistance = 0.118;
         Data::WorldSetting::airViscosity = 1.56;
+        m_drawClouds = false;
+        backgroundColor = { 209, 145, 86 };
         break;
 
 
@@ -226,6 +236,9 @@ void UI::LoadWorldOption()
         Data::WorldSetting::GRAVITY = -9.81;
         Data::WorldSetting::airResistance = 1.0;
         Data::WorldSetting::airViscosity = 10.0;
+        m_drawClouds = true;
+        backgroundColor = DARKBLUE;
+        background = LoadTexture("assets/bubble.png");
         break;
 
     default:

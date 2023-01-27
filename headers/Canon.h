@@ -28,7 +28,7 @@ namespace Core
 		Float2 position = Float2{ 200,100 };
 		double timeInCanon;
 		double angle = 0;
-		double canonLength = 1;
+		double canonLength = 0.5;
 		double power = 10;
 		double timeInAir;
 		double maxW;
