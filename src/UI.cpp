@@ -221,7 +221,7 @@ void UI::LoadWorldOption()
         Data::WorldSetting::airViscosity = 0.0;
         m_drawClouds = true;
         backgroundColor = BLACK;
-        background = LoadTexture("assets/stars.png");
+        background = LoadTexture("assets/star.png");
         break;
 
     case 2: // Mars
