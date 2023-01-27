@@ -76,11 +76,11 @@ namespace Core
 		/* Calcul du coefficient de friction */
 		float weight = Data::WorldSetting::GRAVITY * p_weight;
 		double RadAngle = DEG2RAD * angle;
-		
+
 		/* Valeur brut du a l'enoncé */
 		double deccelerationFriction = -2;
 		double coefFriction = sqrt(2.f * deccelerationFriction * canonLength + (speedZero.Magnitude() * speedZero.Magnitude()));
-		return {coefFriction * cos(RadAngle) , coefFriction * sin(-RadAngle)};
+		return { coefFriction * cos(RadAngle) , coefFriction * sin(-RadAngle) };
 	}
 
 	/// <summary>
