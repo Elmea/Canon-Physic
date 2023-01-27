@@ -81,7 +81,7 @@ namespace Core
 	}
 
 	/// <summary>
-	/// Ecoulement de Stokes <br/>
+	/// Ecoulement de Stokes <para />
 	/// Calcul du coeficient de trainée : 24/Re 
 	/// Re : Ecoulement du fluide sur la sphere
 	/// Re d'une sphere = (DensiteAir * V * diametre) / ViscoAir
