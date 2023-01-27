@@ -1,3 +1,8 @@
+body
+{
+    background-color: #313131;
+}
+
 h1
 {
     text-align: center;
@@ -65,13 +70,14 @@ h2
     grid-template-columns: 1fr 1fr;
     row-gap: 50px;
    
-    border-color: aliceblue;
+  
     width: 100%;
 }
 
 .imageEnv img
 { 
     border: 4px solid;
+    border-color: rgb(145, 197, 145);
     width: 90%;
    
 

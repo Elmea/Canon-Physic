@@ -1,5 +1,5 @@
-
 <link  href="style.css" rel="stylesheet"></link>
+<body>
 
 <h1> TP : Canon Projet </h1>
 
@@ -99,6 +99,6 @@ Pour réaliser ce projet, nous avons utilisé plusieurs librairies :
     <li> Dear ImGUI
 </ul>
 </div>
-
+</body>
 
 
