@@ -1,5 +1,6 @@
+<html>
 <link  href="style.css" rel="stylesheet"></link>
-<style="background-color: #a4f9ef7F">
+
 <div class = body>
 <h1> TP : Canon Projet </h1>
 <h2> Groupe : </h2>  
@@ -99,5 +100,5 @@ Pour réaliser ce projet, nous avons utilisé plusieurs librairies :
 </ul>
 </div>
 </body>
-
+</html>
 
