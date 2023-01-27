@@ -151,7 +151,7 @@ void UI::CanonParameters(Core::Canon* canon)
             canonRbody.SetStartPos(canon->position);
             canon->valueChanged = true;
         }
-        if (SliderDouble("Strength (N) ##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
+        if (SliderDouble("Bullet speed (m/s) ##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
         {
             canon->valueChanged = true;
         }
