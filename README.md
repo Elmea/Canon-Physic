@@ -1,5 +1,5 @@
 <html>
-<link  href="style.css" rel="stylesheet"></link>
+<link  href="style.css" rel="stylesheet">
 
 <div class = body>
 <h1> TP : Canon Projet </h1>
