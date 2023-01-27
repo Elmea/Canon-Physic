@@ -9,6 +9,8 @@ namespace Core
 {
 	double Projectile::lifeTimeAfterCollision = 2.5f;
 
+	int Projectile::nbProjectileCreated = 0;
+
 	Projectile::Projectile(Float2 position, double radius, double weight, const Float2& projSpeedZero, Renderer::RendererManager* _manager) : m_pos(position), m_radius(radius), m_weight(weight),
 		m_frontSurface(PI* ((radius* radius) / 16.0)), m_manager(_manager)
 	{
@@ -31,12 +33,22 @@ namespace Core
 	{
 		UI::projectileParameters[m_id].currentLifeTime = m_lifeTime - m_inAirTime;
 
+		if (UI::projectileParameters[m_id].shouldDie && m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
+		{
+			nbProjectileCreated--;
+			UI::projectileParameters.erase(m_id);
+			m_manager->ShouldRemove(this);
+			return;
+		}
+
 		if (IsOnFloor())
 		{
 			ImpactReaction(deltaTime);
 			return;
 		}
 		
+
+
 		Move(deltaTime);
 
 		if (m_pos.y >= m_maxHeight)
@@ -146,13 +158,6 @@ namespace Core
 		if (!m_hasHitGround)
 			TouchGround(deltaTime);
 
-		if (UI::projectileParameters[m_id].shouldDie && m_lifeTime - m_inAirTime > lifeTimeAfterCollision)
-		{
-			nbProjectileCreated--;
-			UI::projectileParameters.erase(m_id);
-			m_manager->ShouldRemove(this);
-			return;
-		}
 		m_lifeTime += deltaTime;
 		m_pos.y = 0;
 		return;

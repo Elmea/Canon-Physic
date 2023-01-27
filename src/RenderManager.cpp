@@ -1,6 +1,7 @@
 #include "RenderManager.h"
+#include "Projectile.h"
 #include <algorithm>
-
+#include <iostream>
 namespace Renderer
 {
 	
@@ -62,11 +63,13 @@ namespace Renderer
 			(*i)->Update(deltaTime);
 		}
 
+
 		for (auto obj : m_objToDelete)
 		{
 			RemoveObject(obj);
 		}
 		m_objToDelete.clear();
+
 	}
 	
 }

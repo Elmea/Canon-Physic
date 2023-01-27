@@ -140,15 +140,17 @@ namespace Core
 			rigidbody.SetStartPos(position);
 			newSpeed = ResolveCollision(weight);
 		}
-		else 
+		else
 		{
 			newSpeed = speedZero;
 		}
 
-		Float2 newPos {position.x + cos(-angle * DEG2RAD) * size.x/2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
+		Float2 newPos{ position.x + cos(-angle * DEG2RAD) * size.x / 2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
 
 		Projectile* pProjectile = new Projectile(newPos, radius, weight, newSpeed, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
+		
+
 	}
 
 	void Canon::Update(double deltaTime)

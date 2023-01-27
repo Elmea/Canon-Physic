@@ -132,9 +132,11 @@ void UI::ProjectileParameters()
 {
     if (ImGui::TreeNodeEx("Projectile parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
+        int tmp = Core::Projectile::nbProjectileCreated;
+        ImGui::Text(("nb Projectile : " + std::to_string(tmp)).c_str());
         SliderDouble("Weight (kg)##Projectile", &weight, 0.1, 1000);
         SliderDouble("Size (m)##Projectile", &sizeP, 4, 50);
-        SliderDouble("Life Time (s)##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
+        SliderDouble("Life Time (s)##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 5);
         ImGui::Checkbox("Draw forces", &drawProjectileForces);
         ImGui::Checkbox("Draw path", &drawProjectilePath);
         ImGui::TreePop();
