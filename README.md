@@ -64,7 +64,7 @@ Pour ce projet de physique, l'objectif était d'implémenter un canon qui propul
     </div>
     <div class = imageProject>
     <img src = "Images/Formule8W.png" alt ="Formule">
-    <img src = "Images/Formule2W.png" alt ="Formule">
+    <img src = "Images/Formule2.png" alt ="Formule">
     <img src = "Images/Formule1.png" alt ="Formule">
     </div>
 </div>
