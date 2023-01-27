@@ -85,19 +85,20 @@ Pour ce projet de physique, l'objectif était d'implémenter un canon qui propul
 Nous avons ajouté la possibilité de changer le type d'environement dans lequel s'effectue la simulation. Il est possiblie de choisir entre la Terre, la Lune, Mars ou encore dans de l'eau. Lorsque vous choissiez un de ces quatres environnement, les paramètres du monde vont être changer pour correspondre à l'environnement sélectionné.
 
 <div class = imageEnv>
-        <img src = "Images/Formule7.png" alt ="Formule">
-        <img src = "Images/Formule7.png" alt ="Formule">
-        <img src = "Images/Formule7.png" alt ="Formule">
-        <img src = "Images/Formule7.png" alt ="Formule">
+        <img src = "Images/Project2.png" alt ="Formule">
+        <img src = "Images/Project3.png" alt ="Formule">
+        <img src = "Images/Project4.png" alt ="Formule">
+        <img src = "Images/Project5.png" alt ="Formule">
     </div>
 </div>
+<div class = Chapter>
 <h2> Crédits : </h2>
 Pour réaliser ce projet, nous avons utilisé plusieurs librairies : 
 <ul>
     <li> Raylib 
     <li> Dear ImGUI
 </ul>
-
+</div>
 
 
 
