@@ -39,6 +39,7 @@ h2
 {
     width: 50%;
     padding-left: 50px;
+    margin: auto;
 }
 
 .Chapter
@@ -58,4 +59,13 @@ h2
 {
     height: 40%;
 }
+.imageEnv
+{
+    display: flex;
+    width: 100%;
+}
 
+.imageEnv img
+{
+    width: 25%;
+}

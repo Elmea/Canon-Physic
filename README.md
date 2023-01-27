@@ -45,23 +45,52 @@ Pour ce projet de physique, l'objectif était d'implémenter un canon qui propul
     <div class = intro>
         <div class = description>
         Pour le frottement de canon, nous avons appliqué un frottement de solide contre solide en utilisant le coffecient de Acier / Acier qui de 0.2 afin de modifier la vitesse initiale de notre projectile.
+        <ul>
+        <li> Longueur du canon : Delta x
+        <li> Vitesse initiale : V&#7522;
+        </ul>
         </div>
         <div class = imageProject>
             <img src = "Images/Formule5.png" alt ="Formule">
-            <img src = "Images/Formule6.png" alt ="Formule">
         </div>
     </div>
 </div>
 
-<h2> Frottement l'air : </h2>
-Pour le frottement de l'air,
+<div class = Chapter>
+    <h2> Frottement l'air : </h2>
+    <div class = intro>
+        Pour le frottement de l'air,
+    </div>
+    <div class = imageProject>
+    <img src = "Images/Formule1.png" alt ="Formule">
+    <img src = "Images/Formule2.png" alt ="Formule">
+    </div>
+</div>
 
+
+<div class = Chapter>
 <h2> Collision du canon </h2>  
-Pour la collision du canon avec la balle, on applique une collision inélastique sur le canon et un frottement solide contre solide pour le ralentir après le tir. 
-<img src = "Img.png" alt ="Formule">
+ <div class = intro>
+        <div class = description>
+            Pour la collision du canon avec la balle, on applique une collision inélastique sur le canon et un frottement solide contre solide pour le ralentir après le tir. 
+        </div>
+    <div class = imageProject>
+        <img src = "Images/Formule7.png" alt ="Formule">
+    </div>
+</div>
+
+<div class = Chapter>
 <h2> Features Additionnels : </h2>
-Prediciton de tir
-Type d'environement
+
+Nous avons ajouté la possibilité de changer le type d'environement dans lequel s'effectue la simulation. Il est possiblie de choisir entre la Terre, la Lune, Mars ou encore dans de l'eau. Lorsque vous choissiez un de ces quatres environnement, les paramètres du monde vont être changer pour correspondre à l'environnement sélectionné.
+
+<div class = imageEnv>
+        <img src = "Images/Formule7.png" alt ="Formule">
+        <img src = "Images/Formule7.png" alt ="Formule">
+        <img src = "Images/Formule7.png" alt ="Formule">
+        <img src = "Images/Formule7.png" alt ="Formule">
+    </div>
+</div>
 <h2> Crédits : </h2>
 Pour réaliser ce projet, nous avons utilisé plusieurs librairies : 
 <ul>
