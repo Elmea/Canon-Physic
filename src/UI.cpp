@@ -176,9 +176,6 @@ void UI::CanonParameters(Core::Canon* canon)
         ImGui::Checkbox("Shoot prediction", &drawShootPrediction);
         ImGui::Checkbox("Canon Collision", &canon->isCollisionActive);
        
-         
-       
-
         ImGui::Text("Canon x delta : %f", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
         ImGui::Text("Canon x velocity : %f", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
 
