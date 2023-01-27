@@ -110,7 +110,6 @@ namespace Core
 		UI::timeAir = m_inAirTime;
 		m_trajectoryPosition.push_back(Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter));
 
-		
 	}
 
 	/// <summary>
