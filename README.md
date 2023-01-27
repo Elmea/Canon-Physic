@@ -59,11 +59,13 @@ Pour ce projet de physique, l'objectif était d'implémenter un canon qui propul
 <div class = Chapter>
     <h2> Frottement l'air : </h2>
     <div class = intro>
-        Pour le frottement de l'air,
+        Pour le frottement de l'air, nous avons utilisé les calculs de force de trainée en temps réel.
+        Nous avons utilisé la formule de l'écoulement de Stokes pour calculer le coefficient de trainée en fonction du profil du projectil, partant du principe qu'il s'aggira toujours d'une sphere en acier.
     </div>
     <div class = imageProject>
+    <img src = "Images/Formule8W.png" alt ="Formule">
+    <img src = "Images/Formule2W.png" alt ="Formule">
     <img src = "Images/Formule1.png" alt ="Formule">
-    <img src = "Images/Formule2.png" alt ="Formule">
     </div>
 </div>
 
