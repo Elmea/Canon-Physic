@@ -61,20 +61,34 @@ namespace Core
 	{
 	}
 
+	/// <summary>
+	/// Calcul de la vitesse du canon apres le tir en appliquant la conversion de quantité de mouvement.
+	/// Retourne le coefficient de friction qui sera la vitesse initiale de la balle lors du tir.
+	/// </summary>
+	/// <returns></returns>
 	Float2 Canon::ResolveCollision(double p_weight)
 	{
+		/* Calcul du recul du canon et ajout de la force */
 		Float2 speedCanon = ((speedZero * p_weight) / weight) * -1;
 		speedCanon.y = 0;
 		rigidbody.AddForce(speedCanon, ForceType::FT_SPEED);
 
+		/* Calcul du coefficient de friction */
 		float weight = Data::WorldSetting::GRAVITY * p_weight;
 		double RadAngle = DEG2RAD * angle;
 		
-		double deccelerationFriction = -5;
+		/* Valeur brut du a l'enoncé */
+		double deccelerationFriction = -2;
 		double coefFriction = sqrt(2.f * deccelerationFriction * canonLength + (speedZero.Magnitude() * speedZero.Magnitude()));
 		return {coefFriction * cos(RadAngle) , coefFriction * sin(-RadAngle)};
 	}
 
+	/// <summary>
+	/// Precalcul des valeurs de temps de vol, distance max en hauteur et longueur.
+	/// Dessine une courbe en fonction de ces valeurs.
+	/// Ne prend pas en compte la resistance de l'air ni la collision et les frottements avec le canon.
+	/// </summary>
+	/// <returns></returns>
 	void Canon::ShowPredictionShoot()
 	{
 		if (valueChanged)
@@ -158,6 +172,6 @@ namespace Core
 		DrawTexture(m_cannonBaseTex, destRec.x - (float)size.x / 2 + 25, destRec.y, WHITE);
 
 		/* Draw support of the cannon */
-		DrawRectangle(0, raylibPos.y + m_cannonBaseTex.height, initPos.x + (float)size.x, 1080, { 80, 80, 80 , 250 });
+		DrawRectangle(0, raylibPos.y + m_cannonBaseTex.height, initPos.x + (float)size.x/2, 1080, { 80, 80, 80 , 250 });
 	}
 }
