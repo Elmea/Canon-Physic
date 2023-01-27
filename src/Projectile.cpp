@@ -80,7 +80,7 @@ namespace Core
 	}
 
 	/// <summary>
-	/// Ecoulement de Stokes <br/>
+	/// Ecoulement de Stokes <para />
 	/// Calcul du coeficient de trainée : 24/Re 
 	/// Re : Ecoulement du fluide sur la sphere
 	/// Re d'une sphere = (DensiteAir * V * diametre) / ViscoAir
@@ -160,6 +160,6 @@ namespace Core
 		if (m_frameCount < m_frameDuration) return;
 
 		m_trajectoryPosition.push_back(Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter));
-		m_frameCount = 0
+		m_frameCount = 0;
 	}
 }
