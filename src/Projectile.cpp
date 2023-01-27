@@ -53,7 +53,7 @@ namespace Core
 	{
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
 		DrawCircle(raylibPos.x, raylibPos.y, m_radius, YELLOW);
-		DrawProjectilePath();
+		if (UI::drawProjectilePath) DrawProjectilePath();
 		if (UI::drawProjectileForces) rigidbody.DrawForces();
 		rigidbody.ClearForces();
 	}
@@ -94,7 +94,6 @@ namespace Core
 
 	void Projectile::DrawProjectilePath()
 	{
-	
 		DrawLineStrip(&m_trajectoryPosition[0],m_trajectoryPosition.size(), RED);
 	}
 

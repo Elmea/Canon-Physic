@@ -10,6 +10,9 @@ double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
 bool UI::drawProjectileForces = false;
+bool UI::drawProjectilePath = true;
+bool UI::drawShootPrediction = true;
+
 Color UI::backgroundColor = SKYBLUE;
 std::map<int, ProjectileParameters> UI::projectileParameters = {};
 
@@ -131,6 +134,7 @@ void UI::ProjectileParameters()
         SliderDouble("Size##Projectile", &sizeP, 4, 50);
         SliderDouble("Life Time##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
         ImGui::Checkbox("Draw forces", &drawProjectileForces);
+        ImGui::Checkbox("Draw path", &drawProjectilePath);
         ImGui::TreePop();
     }
 }
@@ -169,6 +173,7 @@ void UI::CanonParameters(Core::Canon* canon)
         {
             canon->valueChanged = true;
         }
+        ImGui::Checkbox("Shoot prediction", &drawShootPrediction);
         ImGui::Checkbox("Canon Collision", &canon->isCollisionActive);
        
          

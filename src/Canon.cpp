@@ -2,6 +2,7 @@
 #include "raylib.h"
 #include "Projectile.h"
 #include "SimulationData.h"
+#include "UI.h"
 
 namespace Core
 {
@@ -134,7 +135,7 @@ namespace Core
 
 	void Canon::Update(double deltaTime)
 	{
-		ShowPredictionShoot();
+		if (UI::drawShootPrediction) ShowPredictionShoot();
 		rigidbody.Update(deltaTime);
 		position = rigidbody.GetPos();
 		ResolveFriction();
