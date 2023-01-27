@@ -113,6 +113,10 @@ namespace Core
 		
 	}
 
+	/// <summary>
+	/// Déplacement du projecile en fonction de la vélocité calculée dans le Rigidbody.
+	/// </summary>
+	/// <returns></returns>
 	void Projectile::Move(double deltaTime)
 	{
 		if (!UI::projectileParameters[m_id].controlPos)
@@ -135,6 +139,10 @@ namespace Core
 		m_frameCount++;
 	}
 
+	/// <summary>
+	/// Gestion du projectile ayant touché le sol.
+	/// </summary>
+	/// <returns></returns>
 	void Projectile::ImpactReaction(double deltaTime)
 	{
 		if (!m_hasHitGround)
