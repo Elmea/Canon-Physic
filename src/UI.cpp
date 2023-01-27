@@ -9,6 +9,7 @@
 double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
+bool UI::drawProjectileForces = false;
 std::map<int, ProjectileParameters> UI::projectileParameters = {};
 
 static const char* preCalcultedOption[WORLD_OPTION_NB]
@@ -73,13 +74,12 @@ UI::~UI()
 
 void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 {
-    
     ShowFPS();
     NewFrame();
 
     MoveCannon(canon);
     NewWindow("MainWindow");
-
+    ImGui::PushItemWidth(ImGui::GetWindowWidth() * 0.5f);
     ProjectileParameters();
     ImGui::Spacing();
     CanonParameters(canon);
@@ -92,6 +92,7 @@ void UI::Draw(Core::Canon* canon, Renderer::RendererManager& objectManager)
 
     ShowValuesBeforeShoot(canon);
     ShowValuesAfterShoot();
+
     NewWindow("Game");
     CanonAction(canon, objectManager);
     CloseWindow();
@@ -123,9 +124,10 @@ void UI::ProjectileParameters()
 {
     if (ImGui::TreeNodeEx("Projectile parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
-        SliderDouble("Weight##Projectile", &weight, 0.1, 1000);
-        SliderDouble("Size##Projectile", &sizeP, 4, 50);
-        SliderDouble("Life Time##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
+        SliderDouble("Weight (kg)##Projectile", &weight, 0.1, 1000);
+        SliderDouble("Size (m)##Projectile", &sizeP, 4, 50);
+        SliderDouble("Life Time (s)##Projectile", &Core::Projectile::lifeTimeAfterCollision, 0, 10);
+        ImGui::Checkbox("Draw forces", &drawProjectileForces);
         ImGui::TreePop();
     }
 }
@@ -135,42 +137,42 @@ void UI::CanonParameters(Core::Canon* canon)
     if (ImGui::TreeNodeEx("Canon parameters ", ImGuiTreeNodeFlags_DefaultOpen))
     {
         Core::Rigidbody& canonRbody = canon->GetRigidbody();
-        if (SliderDouble("Height##Canon", &canon->position.y, minHeightCanon, maxHeightCanon))
+        if (SliderDouble("Height (m) ##Canon", &canon->position.y, minHeightCanon, maxHeightCanon))
         {
             canon->initPos = canon->position;
             canonRbody.SetStartPos(canon->position);
             canon->valueChanged = true;
         }
-        if (SliderDouble("Strength##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
+        if (SliderDouble("Strength (N) ##Canon", &canon->power, 15 * (10.0 / Data::WorldSetting::pixelPerMeter), 900 * (10.0 / Data::WorldSetting::pixelPerMeter)))
         {
             canon->valueChanged = true;
         }
-        if (SliderDouble("Shoot direction##Canon", &canon->angle, minAngleCanon, maxAngleCanon))
-        {
-            canon->valueChanged = true;
-
-        }
-        if (SliderDouble("Weight", &canon->weight, 1, 1000))
+        if (SliderDouble("Angle (Degree)##Canon", &canon->angle, minAngleCanon, maxAngleCanon))
         {
             canon->valueChanged = true;
 
         }
-        if (SliderDouble("Speed Drag", &speedDrag, 0.01, 100))
+        if (SliderDouble("Weight (kg)##Canon", &canon->weight, 1, 1000))
+        {
+            canon->valueChanged = true;
+
+        }
+        if (SliderDouble("Canon Lengh (m) ##Canon", &canon->canonLength, 0, 10))
+        {
+            canon->valueChanged = true;
+        }
+        if (SliderDouble("Speed Drag##Canon", &speedDrag, 0.01, 100))
         {
 
             canon->valueChanged = true;
         }
-        if (SliderDouble("Canon Lengh", &canon->canonLength, 1, 10))
-        {
-            canon->valueChanged = true;
-        }
-        ImGui::Checkbox("Canon Collision", &canon->isCollisionActive);
+        ImGui::Checkbox("Canon Collision##Canon", &canon->isCollisionActive);
        
          
        
 
-        ImGui::Text("Canon x delta : %f", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
-        ImGui::Text("Canon x velocity : %f", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
+        ImGui::Text("Canon distance from origin : %2.f m", (canon->position.x - canon->GetInitPos().x) / Data::WorldSetting::pixelPerMeter);
+        ImGui::Text("Canon speed  : %2.f m/s", canonRbody.GetVelocity().x / Data::WorldSetting::pixelPerMeter);
 
         ImGui::TreePop();
     }
@@ -185,10 +187,13 @@ void UI::WorldParameters(Core::Canon* canon)
             canon->valueChanged = true;
         }
 
-        SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 100);
+        SliderDouble("Air Resistance", &Data::WorldSetting::airResistance, 0, 10);
         SliderDouble("Air Viscosity", &Data::WorldSetting::airViscosity, 0, 10);
         if (ImGui::Combo("Precalculted values", &usedOption, preCalcultedOption, WORLD_OPTION_NB))
+        {
             LoadWorldOption();
+            canon->valueChanged = true;
+        }
 
         ImGui::TreePop();
     }
@@ -234,22 +239,25 @@ void UI::CurrentProjectileParam()
     for (auto itr = projectileParameters.begin(); itr != projectileParameters.end() && i < 5; ++itr, i++)
     {
         ImGui::Text(TextFormat("Projectile n %d", itr->first));
-        ImGui::Text(TextFormat("Velocity   : %2.f , %2.f", projectileParameters[itr->first].velocity.x, projectileParameters[itr->first].velocity.y));
+        ImGui::Text(TextFormat("Velocity   : x = %2.f , y = %2.f", projectileParameters[itr->first].velocity.x, projectileParameters[itr->first].velocity.y));
+        ImGui::Text(TextFormat("Speed      : %2.f m/s", projectileParameters[itr->first].velocity.Magnitude()));
         ImGui::Text(TextFormat("Position   : %2.f , %2.f", projectileParameters[itr->first].position.x, projectileParameters[itr->first].position.y));
-        ImGui::Text(TextFormat("Current life time : %2.f", projectileParameters[itr->first].currentLifeTime));
-        ImGui::Checkbox("Should projectile die", &projectileParameters[itr->first].shouldDie);
+        ImGui::Text(TextFormat("Current life time : %2.f s", projectileParameters[itr->first].currentLifeTime));
 
-        ImGui::Checkbox("Control pos manually", &projectileParameters[itr->first].controlPos);
+        ImGui::Checkbox(TextFormat("Should projectile die ##%d", itr->first), &projectileParameters[itr->first].shouldDie );
+        ImGui::Checkbox(TextFormat("Control pos manually ##%d", itr->first), &(projectileParameters[itr->first].controlPos));
+
         if (projectileParameters[itr->first].controlPos)
         {
-            SliderDouble("Lock position X", &projectileParameters[itr->first].position.x, 0 , 1920/Data::WorldSetting::pixelPerMeter);
-            SliderDouble("Lock position Y", &projectileParameters[itr->first].position.y, 0.1, 1080 / Data::WorldSetting::pixelPerMeter);
+            SliderDouble(TextFormat("Lock position X ##%d", itr->first), &projectileParameters[itr->first].position.x, 0 , 1920/Data::WorldSetting::pixelPerMeter);
+            SliderDouble(TextFormat("Lock position Y ##%d", itr->first), &projectileParameters[itr->first].position.y, 0.1, 1080 / Data::WorldSetting::pixelPerMeter);
         }
-
 
         ImGui::NewLine();
         ImGui::NewLine();
     }
+
+
 }
 
 void UI::CanonAction(Core::Canon* canon, Renderer::RendererManager& objectManager)
@@ -259,6 +267,7 @@ void UI::CanonAction(Core::Canon* canon, Renderer::RendererManager& objectManage
     if (ImGui::Button("Reset Position", ImVec2(150, 75)))
     {
         canon->ResetPosition();
+        canon->valueChanged = true;
     }
 }
 
@@ -267,9 +276,9 @@ void UI::ShowValuesBeforeShoot(Core::Canon* canon)
     NewWindow("Pre calculated values");
 
     /* Show values */
-    ImGui::Text(TextFormat("Max Horizontal length : %.2f" , canon->maxW     ));
-    ImGui::Text(TextFormat("Max Height     length : %.2f" , canon->maxH     ));
-    ImGui::Text(TextFormat("Flight time    length : %.2f" , canon->timeInAir));
+    ImGui::Text(TextFormat("Max Horizontal length : %.2f m" , canon->maxW     ));
+    ImGui::Text(TextFormat("Max Height     length : %.2f m" , canon->maxH     ));
+    ImGui::Text(TextFormat("Flight time    length : %.2f s" , canon->timeInAir));
 
     CloseWindow();
 }
@@ -333,9 +342,9 @@ void UI::ShowValuesAfterShoot()
 {
     ImGui::Begin("Real values");
     
-    ImGui::Text(TextFormat("Real Horizontal length : %.2f", length));
-    ImGui::Text(TextFormat("Real Height length     : %.2f", height));
-    ImGui::Text(TextFormat("Real Flight time       : %.2f", timeAir));
+    ImGui::Text(TextFormat("Real Horizontal length : %.2f m", length));
+    ImGui::Text(TextFormat("Real Height length     : %.2f m", height));
+    ImGui::Text(TextFormat("Real Flight time       : %.2f s", timeAir));
 
     ImGui::End();
 }

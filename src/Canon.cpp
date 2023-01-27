@@ -23,6 +23,7 @@ namespace Core
 		if (rigidbody.GetVelocity().x < 0)
 		{
 			rigidbody.AddForce(Float2{ 0.03, 0 }, ForceType::FT_SPEED);
+			valueChanged = true;
 		}
 		else
 		{
@@ -34,7 +35,12 @@ namespace Core
 	{
 		rigidbody.StopVelocity();
 		rigidbody.ClearForces();
-		position = initPos;
+		if (position != initPos)
+		{
+			position = initPos;
+			valueChanged = true;
+		}
+		
 	}
 
 	Canon::Canon()
@@ -43,8 +49,9 @@ namespace Core
 		m_canonTex = LoadTexture("assets/Cannon.png");
 		m_cannonBaseTex = LoadTexture("assets/Cannonbase.png");
 
-		size.x = m_canonTex.width;
-		size.y = m_canonTex.height;
+		size.x  = m_canonTex.width;
+		size.y  = m_canonTex.height;
+		rigidbody.SetStartPos(position);
 		initPos = position;
 
 	}
@@ -53,24 +60,48 @@ namespace Core
 	{
 	}
 
-	void Canon::ResolveCollision(double p_weight)
+	/// <summary>
+	/// Calcul de la vitesse du canon apres le tir en appliquant la conversion de quantité de mouvement.
+	/// Retourne le coefficient de friction qui sera la vitesse initiale de la balle lors du tir.
+	/// </summary>
+	/// <returns></returns>
+	Float2 Canon::ResolveCollision(double p_weight)
 	{
+		/* Calcul du recul du canon et ajout de la force */
 		Float2 speedCanon = ((speedZero * p_weight) / weight) * -1;
 		speedCanon.y = 0;
 		rigidbody.AddForce(speedCanon, ForceType::FT_SPEED);
+
+		/* Calcul du coefficient de friction */
+		float weight = Data::WorldSetting::GRAVITY * p_weight;
+		double RadAngle = DEG2RAD * angle;
+		
+		/* Valeur brut du a l'enoncé */
+		double deccelerationFriction = -2;
+		double coefFriction = sqrt(2.f * deccelerationFriction * canonLength + (speedZero.Magnitude() * speedZero.Magnitude()));
+		return {coefFriction * cos(RadAngle) , coefFriction * sin(-RadAngle)};
 	}
 
+	/// <summary>
+	/// Precalcul des valeurs de temps de vol, distance max en hauteur et longueur.
+	/// Dessine une courbe en fonction de ces valeurs.
+	/// Ne prend pas en compte la resistance de l'air ni la collision et les frottements avec le canon.
+	/// </summary>
+	/// <returns></returns>
 	void Canon::ShowPredictionShoot()
 	{
 		if (valueChanged)
 		{
+			timeInCanon = canonLength / speedZero.Magnitude();
 			valueChanged = false;
+
 			/* Setup values */
 			double RadAngle = DEG2RAD * angle;
 			speedZero = { power * cos(RadAngle) , power * sin(-RadAngle) };
+			
+			/* Set the values to make equation more readable*/
 			double ySqr = speedZero.y * speedZero.y;
 			double realHeight = position.y / Data::WorldSetting::pixelPerMeter;
-
 			double delta = sqrt((ySqr)+2 * -Data::WorldSetting::GRAVITY * realHeight);
 
 			/* Calculation */
@@ -100,12 +131,18 @@ namespace Core
 
 	void Canon::Shoot(double radius, double weight)
 	{
+		Float2 newSpeed;
 		if (isCollisionActive)
 		{
 			rigidbody.SetStartPos(position);
-			ResolveCollision(weight);
+			newSpeed = ResolveCollision(weight);
 		}
-		Projectile* pProjectile = new Projectile(position, radius, weight, speedZero, m_renderManager);
+		else 
+		{
+			newSpeed = speedZero;
+		}
+
+		Projectile* pProjectile = new Projectile(position, radius, weight, newSpeed, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
 	}
 

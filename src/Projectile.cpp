@@ -54,7 +54,8 @@ namespace Core
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
 		DrawCircle(raylibPos.x, raylibPos.y, m_radius, YELLOW);
 		DrawProjectilePath();
-		
+		if (UI::drawProjectileForces) rigidbody.DrawForces();
+		rigidbody.ClearForces();
 	}
 
 	void Projectile::AddForce(Float2 force, Core::ForceType type)
@@ -109,10 +110,12 @@ namespace Core
 		UI::timeAir = m_inAirTime;
 		m_trajectoryPosition.push_back(Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter));
 
-		
 	}
 
-	
+	/// <summary>
+	/// Déplacement du projecile en fonction de la vélocité calculée dans le Rigidbody.
+	/// </summary>
+	/// <returns></returns>
 	void Projectile::Move(double deltaTime)
 	{
 		if (!UI::projectileParameters[m_id].controlPos)
@@ -135,6 +138,10 @@ namespace Core
 		m_frameCount++;
 	}
 
+	/// <summary>
+	/// Gestion du projectile ayant touché le sol.
+	/// </summary>
+	/// <returns></returns>
 	void Projectile::ImpactReaction(double deltaTime)
 	{
 		if (!m_hasHitGround)
@@ -151,10 +158,12 @@ namespace Core
 		m_pos.y = 0;
 		return;
 	}
+
 	bool Projectile::IsOnFloor()
 	{
 		return m_pos.y <= 0;
 	}
+
 	void Projectile::RegisterPosition()
 	{
 		if (m_frameCount < m_frameDuration) return;

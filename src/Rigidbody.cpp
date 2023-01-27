@@ -12,6 +12,7 @@ namespace Core
 	/// <param name="deltaTime"> : Temps entre deux frame</param>
 	void Rigidbody::Update(double deltaTime)
 	{
+		// V = V0 + at
 		for (Float2 force : m_AccelerationForces)
 		{
 			m_velocity += force * deltaTime;
@@ -23,11 +24,13 @@ namespace Core
 		}
 
 		m_pos += m_velocity * deltaTime;
-
-		ClearForces();
-
 	}
 
+	/// <summary>
+	/// Simulation des forces appliqué au corps par la méthode d'Euler.
+	/// </summary>
+	/// <param name="force"> : Vecteur 3D de la force a ajouter</param>
+	/// <param name="type"> : Type de la force (FT_ACCELERATION / FT_SPEED) </param>
 	void Rigidbody::AddForce(Float2 force, ForceType type)
 	{
 		switch (type)
@@ -58,6 +61,7 @@ namespace Core
 		return m_velocity;
 	}
 
+	// La longueur des forces n'est pas représentative, seule leur direction l'est.
 	void Rigidbody::DrawForces()
 	{
 		Float2 raylibPos = Data::WorldSetting::GetRaylibPos(m_pos * Data::WorldSetting::pixelPerMeter);
