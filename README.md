@@ -63,8 +63,8 @@ Pour ce projet de physique, l'objectif était d'implémenter un canon qui propul
         Nous avons utilisé la formule de l'écoulement de Stokes pour calculer le coefficient de trainée en fonction du profil du projectil, partant du principe qu'il s'aggira toujours d'une sphere en acier.
     </div>
     <div class = imageProject>
-    <img src = "Images/Formule8W.png" alt ="Formule">
-    <img src = "Images/Formule2.png" alt ="Formule">
+    <img src = "Images/Formule8B.png" alt ="Formule">
+    <img src = "Images/Formule2B.png" alt ="Formule">
     <img src = "Images/Formule1.png" alt ="Formule">
     </div>
 </div>
