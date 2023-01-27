@@ -10,6 +10,7 @@ double UI::length = 0;
 double UI::height = 0;
 double UI::timeAir = 0;
 bool UI::drawProjectileForces = false;
+Color UI::backgroundColor = SKYBLUE;
 std::map<int, ProjectileParameters> UI::projectileParameters = {};
 
 static const char* preCalcultedOption[WORLD_OPTION_NB]
@@ -46,20 +47,23 @@ bool UI::ClickInRectangle(Float2 mousePos, Rectangle rec)
 
 void UI::DrawBackGround()
 {
-    if (clouds.size() < 15)
-    { 
-        clouds.push_back(Clouds{ RandomFloat(0.35 , 0.65), Float2 {RandomFloat(0,1920) , RandomFloat(0,300)}, RandomFloat(0.05f , 0.2f)  , (int)RandomFloat(75,255) });
-    }
-
-    for (Clouds& cl : clouds)
+    if (m_drawClouds)
     {
-        cl.pos.x -= cl.speed;
-        if (cl.pos.x <= -(background.width * cl.scale))
-            cl.pos.x = 1900;
+        if (clouds.size() < 15)
+        { 
+            clouds.push_back(Clouds{ RandomFloat(0.35 , 0.65), Float2 {RandomFloat(0,1920) , RandomFloat(0,300)}, RandomFloat(0.05f , 0.2f)  , (int)RandomFloat(75,255) });
+        }
 
-        Color color = { 255,255,255, cl.opacity };
-        DrawTextureEx(background, cl.pos, 0.0f, cl.scale, color);
-    }  
+        for (Clouds& cl : clouds)
+        {
+            cl.pos.x -= cl.speed;
+            if (cl.pos.x <= -(background.width * cl.scale))
+                cl.pos.x = 1900;
+
+            Color color = { 255,255,255, cl.opacity };
+            DrawTextureEx(background, cl.pos, 0.0f, cl.scale, color);
+        }  
+    }
 }
 
 void UI::Init()
@@ -161,7 +165,7 @@ void UI::CanonParameters(Core::Canon* canon)
 
             canon->valueChanged = true;
         }
-        if (SliderDouble("Canon Lengh", &canon->canonLength, 0, 10))
+        if (SliderDouble("Canon Lengh", &canon->canonLength, 0, 2))
         {
             canon->valueChanged = true;
         }
@@ -206,18 +210,26 @@ void UI::LoadWorldOption()
         Data::WorldSetting::GRAVITY = -9.81;
         Data::WorldSetting::airResistance = 0.1;
         Data::WorldSetting::airViscosity = 1.56;
+        m_drawClouds = true;
+        backgroundColor = SKYBLUE;
+        background = LoadTexture("assets/cloud.png");
         break;
 
     case 1: // Moon
         Data::WorldSetting::GRAVITY = -1.62;
         Data::WorldSetting::airResistance = 0.0;
         Data::WorldSetting::airViscosity = 0.0;
+        m_drawClouds = true;
+        backgroundColor = BLACK;
+        background = LoadTexture("assets/stars.png");
         break;
 
     case 2: // Mars
         Data::WorldSetting::GRAVITY = -3.721;
         Data::WorldSetting::airResistance = 0.118;
         Data::WorldSetting::airViscosity = 1.56;
+        m_drawClouds = false;
+        backgroundColor = { 209, 145, 86 };
         break;
 
 
@@ -225,6 +237,9 @@ void UI::LoadWorldOption()
         Data::WorldSetting::GRAVITY = -9.81;
         Data::WorldSetting::airResistance = 1.0;
         Data::WorldSetting::airViscosity = 10.0;
+        m_drawClouds = true;
+        backgroundColor = DARKBLUE;
+        background = LoadTexture("assets/bubble.png");
         break;
 
     default:

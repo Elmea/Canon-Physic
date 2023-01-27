@@ -45,6 +45,8 @@ private :
 	bool SliderDoubleN(const char* text, int nbValues , double* v, double min, double max);
 	bool ClickInRectangle(Float2 mousePos, Rectangle rec);
 
+	bool m_drawClouds = true;
+
 	/* Background values */
 	std::vector<Clouds> clouds;
 	Texture2D background;
@@ -67,6 +69,8 @@ public :
 	static bool drawProjectileForces;
 
 	static std::map<int , ProjectileParameters> projectileParameters;
+
+	static Color backgroundColor;
 
 	void Init();
 	~UI();
