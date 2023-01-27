@@ -143,7 +143,9 @@ namespace Core
 			newSpeed = speedZero;
 		}
 
-		Projectile* pProjectile = new Projectile(position, radius, weight, newSpeed, m_renderManager);
+		Float2 newPos {position.x + cos(-angle * DEG2RAD) * size.x/2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
+
+		Projectile* pProjectile = new Projectile(newPos, radius, weight, newSpeed, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
 	}
 
