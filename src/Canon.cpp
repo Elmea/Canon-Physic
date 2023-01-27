@@ -93,6 +93,7 @@ namespace Core
 	{
 		if (valueChanged)
 		{
+			Float2 StartPos{ position.x + cos(-angle * DEG2RAD) * size.x / 2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
 			timeInCanon = canonLength / speedZero.Magnitude();
 			valueChanged = false;
 
@@ -102,7 +103,7 @@ namespace Core
 			
 			/* Set the values to make equation more readable*/
 			double ySqr = speedZero.y * speedZero.y;
-			double realHeight = position.y / Data::WorldSetting::pixelPerMeter;
+			double realHeight = StartPos.y / Data::WorldSetting::pixelPerMeter;
 			double delta = sqrt((ySqr)+2 * -Data::WorldSetting::GRAVITY * realHeight);
 
 			/* Calculation */
@@ -110,7 +111,7 @@ namespace Core
 			maxW = timeInAir * speedZero.x;
 			maxH = (ySqr / (2.0 * (-Data::WorldSetting::GRAVITY))) + realHeight;
 
-			posImpact = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0) * (timeInAir * timeInAir) } + speedZero * timeInAir) + position / Data::WorldSetting::pixelPerMeter;
+			posImpact = (Float2{ 0,(Data::WorldSetting::GRAVITY / 2.0) * (timeInAir * timeInAir) } + speedZero * timeInAir) + StartPos / Data::WorldSetting::pixelPerMeter;
 			Float2 acc = { 0, Data::WorldSetting::GRAVITY };
 			speedImpact = acc * timeInAir + speedZero;
 		}
@@ -120,7 +121,8 @@ namespace Core
 
 	void Canon::DrawCurvePrediction()
 	{
-		Float2 raylibSPos = Data::WorldSetting::GetRaylibPos(position);
+		Float2 StartPos{ position.x + cos(-angle * DEG2RAD) * size.x / 2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
+		Float2 raylibSPos = Data::WorldSetting::GetRaylibPos(StartPos);
 		Float2 raylibEPos = Data::WorldSetting::GetRaylibPos(posImpact * Data::WorldSetting::pixelPerMeter);
 		Float2 raylibSZero = Data::WorldSetting::GetRaylibSpeed(speedZero);
 		Float2 raylibSEnd = Data::WorldSetting::GetRaylibSpeed(speedImpact);
@@ -143,7 +145,9 @@ namespace Core
 			newSpeed = speedZero;
 		}
 
-		Projectile* pProjectile = new Projectile(position, radius, weight, newSpeed, m_renderManager);
+		Float2 newPos {position.x + cos(-angle * DEG2RAD) * size.x/2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
+
+		Projectile* pProjectile = new Projectile(newPos, radius, weight, newSpeed, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
 	}
 

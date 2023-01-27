@@ -4,7 +4,7 @@
 #include "App.h"
 #include "Projectile.h"
 
-#define WORLD_OPTION_NB 4 
+#define WORLD_OPTION_NB 5
 
 double UI::length = 0;
 double UI::height = 0;
@@ -21,7 +21,8 @@ static const char* preCalcultedOption[WORLD_OPTION_NB]
     "Earth",
     "Moon",
     "Mars",
-    "Water"
+    "Water",
+    "Space"
 };
 
 static int usedOption;
@@ -239,6 +240,15 @@ void UI::LoadWorldOption()
         m_drawClouds = true;
         backgroundColor = DARKBLUE;
         background = LoadTexture("assets/bubble.png");
+        break;
+
+    case 4: // Space
+        Data::WorldSetting::GRAVITY = -0.0;
+        Data::WorldSetting::airResistance = 0.0;
+        Data::WorldSetting::airViscosity = 0.0;
+        m_drawClouds = true;
+        backgroundColor = BLACK;
+        background = LoadTexture("assets/star.png");
         break;
 
     default:
