@@ -86,7 +86,7 @@ namespace Core
 	/// <summary>
 	/// Precalcul des valeurs de temps de vol, distance max en hauteur et longueur.
 	/// Dessine une courbe en fonction de ces valeurs.
-	/// Ne prend pas en compte la resistance de l'air ni la collision et les frottements avec le canon.
+	/// Ne prend pas en compte : resistance de l'air , collision ,frottements avec le canon, parametre du projectile (taille / poids).
 	/// </summary>
 	/// <returns></returns>
 	void Canon::ShowPredictionShoot()
@@ -140,15 +140,17 @@ namespace Core
 			rigidbody.SetStartPos(position);
 			newSpeed = ResolveCollision(weight);
 		}
-		else 
+		else
 		{
 			newSpeed = speedZero;
 		}
 
-		Float2 newPos {position.x + cos(-angle * DEG2RAD) * size.x/2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
+		Float2 newPos{ position.x + cos(-angle * DEG2RAD) * size.x / 2, position.y + sin(-angle * DEG2RAD) * size.x / 2 };
 
 		Projectile* pProjectile = new Projectile(newPos, radius, weight, newSpeed, m_renderManager);
 		m_renderManager->AddObject(pProjectile);
+		
+
 	}
 
 	void Canon::Update(double deltaTime)
